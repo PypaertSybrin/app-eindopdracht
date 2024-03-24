@@ -1,36 +1,30 @@
 # Eindopdracht
 
-Agenda app
+Recipe app
 
 ## Beschrijving
 
-Een app waar je een agenda kan delen met vrienden of familie.
-In de app zal je groepen kunnen maken. Je creëert dus eigenlijk een gezamelijke agenda met elkaar.
-In die agenda kan je dan zaken gaan toevoegen die al jouw groepsleden kunnen zien.
+Een app waar je je eigen recepten kan delen met anderen
+Bij het aanmaken van een recept kan je volgende zaken ingeven: 
+- Ingrediënten 
+- Omschrijving van hoe je het recept maakt 
+- Foto van hoe het eten er zal uitzien 
+- Ingeven hoe lang het ongeveer duurt om het te maken 
+- Voor hoeveel personen de maaltijd is
+Je kan eigen gemaakte recepten private of public maken. Wanneer je je recept public maakt kunnen andere mensen je recept liken en ook gaan opslaan.
+Ook zal je recepten kunnen filteren op bv. populariteit
 
-## Voorbeeld scenario's
+## USP
 
-Vb.1
-Ik heb net een afspraak gemaakt bij de kapper voor volgende week. Ik kan die afspraak toevoegen in de gezamelijke agenda die ik heb met mijn familie. Nu kunnen zij allemaal zien dat ik volgende week naar de kapper moet.
+Wat mijn app uniek maakt is het volgende:
+Bij opgeslagen recepten of recepten die jij zelf hebt gemaakt, kan je ook een datum instellen. Deze datum duidt aan wanneer je dat recept eens wenst te maken. Wanneer je een bepaalde datum hebt ingesteld zullen de ingrediënten van het recept omgezet worden naar een boodschappenlijstje. Hier zal je dus kunnen afchecken welke zaken je al hebt of niet. Bij de dag voor je het recept wilt maken, krijg je een notificatie als je nog bepaalde ingrediënten van het boodschappenlijstje niet in bezit hebt. Het tijdstip van de notificatie zal je ook zelf kunnen instellen.
 
-Vb.2
-Binnenkort is er een evenement waar ik graag naar toe zou gaan. Ik kan dit evenement toevoegen in de gezamelijke agenda die ik heb met mijn vrienden. Nu zien zij ook dat evenement staan in hun agenda en kunnen ze er op reageren of ze graag willen meegaan of niet.
-
-## Functionaliteiten
-
-- Account kunnen aanmaken
-- Groepen kunnen aanmaken met wie je een gezamelijk agenda wilt
-- Mensen kunnen toevoegen aan een groep
-- Een afspraak / evenement / ... kunnen toevoegen aan de agenda
-- Groepsleden die kunnen reageren op een evenement
 
 ## Nice to haves
 
-- Evenementen kunnen gaan syncen met outlook agenda
-- Per evenement een chat kunnen starten om bv. nog bepaalde dingen af te spreken
+- Reacties kunnen plaatsen onder elk recept
 
 ## Packages
 
-- Kalender package: https://pub.dev/packages/table_calendar
-- Chat package: https://pub.dev/packages/flutter_chat_ui
-
+- Flutter_local_notifications: https://pub.dev/packages/flutter_local_notifications/install
+- Image Picker: https://pub.dev/packages/image_picker
