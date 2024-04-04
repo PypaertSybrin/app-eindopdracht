@@ -33,14 +33,14 @@ class Recipe extends StatelessWidget {
       child: InkWell(
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.all(6.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: double.infinity,
-                height: 100,
+                height: large ? 100 : 80,
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
@@ -50,16 +50,22 @@ class Recipe extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              Text(recipeName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-              Text(recipeCreator,
-                  style: TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.grey[700])),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(recipeName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                  Text(recipeCreator,
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: Colors.grey[700])),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

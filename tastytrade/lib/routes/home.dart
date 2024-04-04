@@ -40,7 +40,7 @@ class Home extends StatelessWidget {
             ),
             const Title(title: 'Popular Recipes'),
             SizedBox(
-              height: 181,
+              height: 190,
               child: ListView.separated(
                 clipBehavior: Clip.none,
                 scrollDirection: Axis.horizontal,
@@ -81,7 +81,7 @@ class Home extends StatelessWidget {
             ),
             const Title(title: 'New Recipes'),
             SizedBox(
-              height: 181,
+              height: 190,
               child: ListView.separated(
                 clipBehavior: Clip.none,
                 scrollDirection: Axis.horizontal,

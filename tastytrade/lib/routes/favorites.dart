@@ -10,9 +10,9 @@ class Favorites extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Set the number of columns here
-        crossAxisSpacing: 16.0, // Set the spacing between columns
-        mainAxisSpacing: 16.0, // Set the spacing between rows
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
       ),
       itemCount: 10,
       addAutomaticKeepAlives: false,
@@ -22,7 +22,7 @@ class Favorites extends StatelessWidget {
           large: false,
           imageLocation: 'assets/breakfast.png',
           recipeName: 'Recipe Namesssssssssssssssssssssssssss',
-          recipeCreator: 'Recipe Creatorssssssssssssssssss',
+          recipeCreator: 'Recipe Creatorsssssssssssssssssss',
         );
       },
     );
