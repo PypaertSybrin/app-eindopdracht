@@ -16,6 +16,7 @@ class Recipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // volgens mij is large niet nodig
       width: large ? MediaQuery.of(context).size.width * 0.6 : null,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),

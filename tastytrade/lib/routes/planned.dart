@@ -21,7 +21,7 @@ class Planned extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 16),
                 child: RecipePlanned(
                     imageLocation: 'assets/breakfast.png',
-                    recipeName: 'Recipe Name',
+                    recipeName: 'Recipe Namesssssssssssssssssssssssssss',
                     date: DateTime.now()),
               );
             },

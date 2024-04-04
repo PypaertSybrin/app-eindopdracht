@@ -28,8 +28,8 @@ class Favorites extends StatelessWidget {
                 return const Recipe(
                   large: false,
                   imageLocation: 'assets/breakfast.png',
-                  recipeName: 'Recipe Name',
-                  recipeCreator: 'Recipe Creator',
+                  recipeName: 'Recipe Namesssssssssssssssssssssssssss',
+                  recipeCreator: 'Recipe Creatorssssssssssssssssss',
                 );
               },
             ),
