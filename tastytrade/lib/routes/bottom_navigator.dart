@@ -61,9 +61,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
     );
   }
 }
