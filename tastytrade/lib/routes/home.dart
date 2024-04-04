@@ -9,7 +9,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(top: 64, bottom: 16),
+        padding: const EdgeInsets.only(bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -40,8 +40,9 @@ class Home extends StatelessWidget {
             ),
             const Title(title: 'Popular Recipes'),
             SizedBox(
-              height: 200,
+              height: 181,
               child: ListView.separated(
+                clipBehavior: Clip.none,
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
                 itemBuilder: (context, index) {
@@ -74,14 +75,15 @@ class Home extends StatelessWidget {
                       recipeCreator: 'Recipe Creator');
                 },
                 separatorBuilder: (context, index) {
-                  return const SizedBox(width: 8);
+                  return const SizedBox(width: 16);
                 },
               ),
             ),
             const Title(title: 'New Recipes'),
             SizedBox(
-              height: 200,
+              height: 181,
               child: ListView.separated(
+                clipBehavior: Clip.none,
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
                 itemBuilder: (context, index) {
@@ -114,7 +116,7 @@ class Home extends StatelessWidget {
                       recipeCreator: 'Recipe Creator');
                 },
                 separatorBuilder: (context, index) {
-                  return const SizedBox(width: 8);
+                  return const SizedBox(width: 16);
                 },
               ),
             ),

@@ -6,27 +6,20 @@ class Planned extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 64, left: 16, right: 16),
-      child: Column(
-        children: [
-          const Center(
-              child: Text('Planned',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
-          Expanded(
-              child: ListView.builder(
-            itemCount: 10,
-            addAutomaticKeepAlives: false,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: RecipePlanned(
-                    imageLocation: 'assets/breakfast.png',
-                    recipeName: 'Recipe Namesssssssssssssssssssssssssss',
-                    date: DateTime.now()),
-              );
-            },
-          )),
-        ],
+      padding: const EdgeInsets.all(16),
+      child: ListView.separated(
+        itemCount: 10,
+        clipBehavior: Clip.none,
+        addAutomaticKeepAlives: false,
+        itemBuilder: (context, index) {
+          return RecipePlanned(
+              imageLocation: 'assets/breakfast.png',
+              recipeName: 'Recipe Namesssssssssssssssssssssssssss',
+              date: DateTime.now());
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(height: 16);
+        },
       ),
     );
   }

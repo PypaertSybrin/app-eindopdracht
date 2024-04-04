@@ -21,11 +21,19 @@ class Recipe extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 68, 68, 68).withOpacity(0.30),
+            spreadRadius: 1,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
       ),
       child: InkWell(
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(6.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,

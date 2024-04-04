@@ -17,6 +17,7 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedIndex = 0;
+  String title = 'TastyTrade';
 
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
@@ -28,38 +29,65 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // index == 2 ? title = 'Settings' : title = 'Write_';
+      index == 1
+          ? title = 'Favorites'
+          : index == 2
+              ? title = 'Planning'
+              : index == 3
+                  ? title = 'Profile'
+                  : title = 'TastyTrade';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _selectedIndex != 3
+          ? AppBar(
+              title: Center(
+                  child: Text(title,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold))),
+              backgroundColor: const Color(0xFFFFD2B3),
+            )
+          : null,
+      floatingActionButton: _selectedIndex == 3
+          ? FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: const Color(0xFFFF8737),
+              child: const Icon(Icons.add),
+            )
+          : null,
       backgroundColor: const Color(0xFFFFD2B3),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFFFF8737),
-        unselectedItemColor: Colors.grey[700],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
-            label: 'Planning',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: Theme(
+        data: ThemeData(
+          splashColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          selectedItemColor: const Color(0xFFFF8737),
+          unselectedItemColor: Colors.grey[700],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border),
+              label: 'Favorites',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month_outlined),
+              label: 'Planning',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
     );
