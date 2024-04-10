@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tastytrade/routes/bottom_navigator.dart';
+import 'package:tastytrade/routes/recipe_create.dart';
+import 'package:tastytrade/routes/recipe_detail.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,7 +12,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: BottomNavigator());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: RecipeCreate());
   }
 }
