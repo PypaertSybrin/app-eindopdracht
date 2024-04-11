@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tastytrade/models/user_model.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class SignUp extends StatefulWidget {
@@ -41,19 +39,6 @@ class _SignUpState extends State<SignUp> {
           credential.user!.updatePhotoURL(await profileRef.putFile(image!).then(
               (value) => value.ref.getDownloadURL()));
 
-          // final user = UserModel(
-          //     uid: credential.user!.uid,
-          //     name: name,
-          //     email: email,
-          //     profilePicture: await profileRef.putFile(image!).then((value) {
-          //       return value.ref.getDownloadURL();
-          //     }));
-          // FirebaseFirestore.instance.collection('users').add({
-          //   'uid': user.uid,
-          //   'name': user.name,
-          //   'email': user.email,
-          //   'profilePicture': user.profilePicture,
-          // });
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const BottomNavigator()),
@@ -89,6 +74,35 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  Future showOptions() async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera),
+              title: const Text('Camera'),
+              onTap: () {
+                pickImage('camera');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Gallery'),
+              onTap: () {
+                pickImage('gallery');
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +122,7 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 16),
                 MaterialButton(
                   onPressed: () {
-                    pickImage('camera');
+                    showOptions();
                   },
                   child: CircleAvatar(
                       radius: 50,

@@ -3,6 +3,7 @@ import 'package:tastytrade/routes/favorites.dart';
 import 'package:tastytrade/routes/home.dart';
 import 'package:tastytrade/routes/planned.dart';
 import 'package:tastytrade/routes/profile.dart';
+import 'package:tastytrade/routes/recipe_create.dart';
 
 // change notifier kan je gebruiken om de state van je app te beheren
 // je kan hiermee de state van je app updaten en de widgets die luisteren naar deze state updaten
@@ -54,7 +55,10 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           : null,
       floatingActionButton: _selectedIndex == 3
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RecipeCreate()));
+              },
               backgroundColor: const Color(0xFFFF8737),
               child: const Icon(Icons.add),
             )

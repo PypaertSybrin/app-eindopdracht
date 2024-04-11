@@ -12,7 +12,7 @@ class RecipeModel {
   String description;
   int likes;
   int views;
-  DateTime date = DateTime.now();
+  DateTime date;
   RecipeModel({
     required this.imageLocation,
     required this.recipeName,
@@ -25,5 +25,6 @@ class RecipeModel {
     required this.description,
     required this.likes,
     required this.views,
+    required this.date,
   });
 }
