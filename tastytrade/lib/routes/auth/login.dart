@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/auth/sign_up.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class Login extends StatefulWidget {
@@ -52,6 +54,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<GetRecipes>().getAllRecipes());
     return Scaffold(
       backgroundColor: const Color(0xFFFFD2B3),
       body: Padding(

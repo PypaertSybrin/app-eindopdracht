@@ -84,7 +84,7 @@ class _Recipe extends State<RecipeCreate> {
     setState(() {
       isLoading = false;
     });
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   void addIngredient() {
