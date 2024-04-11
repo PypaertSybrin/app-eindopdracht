@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tastytrade/routes/recipe_detail.dart';
 
 class Recipe extends StatelessWidget {
   final String imageLocation;
@@ -31,7 +32,12 @@ class Recipe extends StatelessWidget {
         ],
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const RecipeDetail()),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

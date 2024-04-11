@@ -1,8 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tastytrade/widgets/recipe.dart';
+import 'package:tastytrade/widgets/recipe_list.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({Key? key}) : super(key: key);
+  Profile({Key? key}) : super(key: key);
+
+  // get current user displayname
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +35,16 @@ class Profile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                      ),
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundImage: user!.photoURL != null
+                          ? NetworkImage(user!.photoURL.toString())
+                          : null,
                     ),
                     const SizedBox(width: 10),
-                    const Text(
-                      'Sybrin Pypaert',
-                      style: TextStyle(
+                    Text(
+                      user!.displayName.toString(),
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -73,28 +78,7 @@ class Profile extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
-          child: GridView.builder(
-            padding: const EdgeInsets.all(16.0),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Set the number of columns here
-              crossAxisSpacing: 16.0, // Set the spacing between columns
-              mainAxisSpacing: 16.0, // Set the spacing between rows
-            ),
-            itemCount: 10,
-            // clipBehavior: Clip.none,
-            addAutomaticKeepAlives: false,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return const Recipe(
-                large: false,
-                imageLocation: 'assets/breakfast.png',
-                recipeName: 'Recipe Namesssssssssssssssssssssssssss',
-                recipeCreator: 'Recipe Creatorssssssssssssssssss',
-              );
-            },
-          ),
-        ),
+        Expanded(child: RecipeList()),
       ],
     );
   }

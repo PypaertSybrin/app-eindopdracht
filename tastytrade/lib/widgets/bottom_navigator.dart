@@ -23,7 +23,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     const Home(),
     const Favorites(),
     const Planned(),
-    const Profile(),
+    Profile(),
   ];
 
   void _onItemTapped(int index) {
@@ -49,6 +49,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                       style: const TextStyle(
                           fontSize: 24, fontWeight: FontWeight.bold))),
               backgroundColor: const Color(0xFFFFD2B3),
+              automaticallyImplyLeading: false,
             )
           : null,
       floatingActionButton: _selectedIndex == 3

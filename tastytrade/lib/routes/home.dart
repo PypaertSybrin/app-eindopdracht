@@ -38,7 +38,21 @@ class Home extends StatelessWidget {
                 ],
               ),
             ),
-            const Title(title: 'Popular Recipes'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                const Title(title: 'Popular Recipes'),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'View all',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
               height: 190,
               child: ListView.separated(
@@ -79,7 +93,21 @@ class Home extends StatelessWidget {
                 },
               ),
             ),
-            const Title(title: 'New Recipes'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                const Title(title: 'New Recipes'),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('View all',
+                      style: TextStyle(
+                        color: Colors.black,
+                      )),
+                ),
+              ],
+            ),
             SizedBox(
               height: 190,
               child: ListView.separated(

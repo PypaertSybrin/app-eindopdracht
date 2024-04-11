@@ -6,15 +6,10 @@ class RecipeDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-            child: Text('TastyTrade',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+        centerTitle: true,
+        title: const Text('TastyTrade',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFFFFD2B3),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: const Color(0xFFFF8737),
-        child: const Icon(Icons.arrow_back, color: Colors.black),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: SingleChildScrollView(

@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:tastytrade/routes/bottom_navigator.dart';
-import 'package:tastytrade/routes/recipe_create.dart';
-import 'package:tastytrade/routes/recipe_detail.dart';
+import 'package:tastytrade/firebase_options.dart';
+import 'package:tastytrade/routes/auth/login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
@@ -12,6 +16,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: RecipeCreate());
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: Login());
   }
 }

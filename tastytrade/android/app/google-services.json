@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "467894851922",
+    "project_id": "tastytrade-fb61b",
+    "storage_bucket": "tastytrade-fb61b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467894851922:android:1a6b6a62573bc19d72c28b",
+        "android_client_info": {
+          "package_name": "com.example.tastytrade"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU_7Kd9ZGWBt88v--PPDqwuTUrCQbBOZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
