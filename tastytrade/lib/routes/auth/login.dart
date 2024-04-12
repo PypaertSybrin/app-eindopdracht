@@ -30,6 +30,8 @@ class _LoginState extends State<Login> {
             .signInWithEmailAndPassword(email: email, password: password);
         if (credential.user != null) {
           await context.read<GetRecipes>().getAllRecipes();
+          context.read<GetRecipes>().getRecipesByLiked(credential.user!.uid);
+          context.read<GetRecipes>().getRecipesByUser(credential.user!.uid);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => BottomNavigator()),

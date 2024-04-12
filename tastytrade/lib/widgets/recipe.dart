@@ -1,18 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tastytrade/models/recipe_model.dart';
 import 'package:tastytrade/routes/recipe_detail.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 
 class Recipe extends StatelessWidget {
-  final String imageLocation;
-  final String recipeName;
-  final String recipeCreator;
+  final RecipeModel recipe;
   final bool large;
 
-  const Recipe(
-      {super.key,
-      required this.imageLocation,
-      required this.recipeName,
-      required this.recipeCreator,
-      required this.large});
+  Recipe({super.key, required this.recipe, required this.large});
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
+
+  // void addOrRemoveLike(BuildContext context) {
+  //   if (context.read<GetRecipes>().checkIfLiked(recipe.docId, recipe.createrUid)) {
+  //     removeLike(context);
+  //   } else {
+  //     addLike(context);
+  //   }
+  // }
+  Future<void> addLike(BuildContext context) async {
+    await context.read<GetRecipes>().addLike(recipe.docId, user!.uid);
+  }
+
+  Future<void> removeLike(BuildContext context) async {
+    await context
+        .read<GetRecipes>()
+        .removeLike(recipe.docId, user!.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,7 +52,8 @@ class Recipe extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const RecipeDetail()),
+            MaterialPageRoute(
+                builder: (context) => RecipeDetail(recipe: recipe)),
           );
         },
         child: Padding(
@@ -50,19 +69,19 @@ class Recipe extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Image.network(imageLocation, fit: BoxFit.cover),
+                child: Image.network(recipe.imageLocation, fit: BoxFit.cover),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(recipeName,
+                  Text(recipe.recipeName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         overflow: TextOverflow.ellipsis,
                       )),
-                  Text(recipeCreator,
+                  Text(recipe.createrName,
                       style: TextStyle(
                           overflow: TextOverflow.ellipsis,
                           color: Colors.grey[700])),
@@ -72,14 +91,25 @@ class Recipe extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
+                    onTap: () {
+                      context.read<GetRecipes>().checkIfLiked(recipe.docId, user!.uid)
+                          ? removeLike(context)
+                          : addLike(context);
+                    },
+                    child: Icon(
+                      context
+                              .watch<GetRecipes>()
+                              .checkIfLiked(recipe.docId, user!.uid)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Color(0xFFFF8737),
                       size: 20.0,
                     ),
                   ),
-                  const Text('1.3k'),
+                  Text(context
+                      .watch<GetRecipes>()
+                      .getLikes(recipe.docId)
+                      .toString()),
                 ],
               )
             ],

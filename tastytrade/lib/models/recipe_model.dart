@@ -1,8 +1,10 @@
 class RecipeModel {
+  String docId;
   String imageLocation;
   String recipeName;
   String createrName;
   String createrUid;
+  String createrProfilePicture;
   int minutes;
   int servings;
   String category;
@@ -11,10 +13,12 @@ class RecipeModel {
   List<String> likes;
   DateTime date;
   RecipeModel({
+    required this.docId,
     required this.imageLocation,
     required this.recipeName,
     required this.createrName,
     required this.createrUid,
+    required this.createrProfilePicture,
     required this.minutes,
     required this.servings,
     required this.category,

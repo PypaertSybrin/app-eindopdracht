@@ -19,26 +19,28 @@ class RecipeList extends StatelessWidget {
       onRefresh: () async {
         await getUpdatedRecipes(context);
       },
-      child: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-        ),
-        itemCount: recipes.length,
-        addAutomaticKeepAlives: false,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final recipe = recipes[index];
-          return Recipe(
-            large: false,
-            imageLocation: recipe.imageLocation,
-            recipeName: recipe.recipeName,
-            recipeCreator: recipe.createrName,
-          );
-        },
-      ),
+      child: recipes.isNotEmpty
+          ? GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: recipes.length,
+              addAutomaticKeepAlives: false,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final recipe = recipes[index];
+                return Recipe(
+                  large: false,
+                  recipe: recipe,
+                );
+              },
+            )
+          : const Center(
+              child: Text('No recipes found'),
+            ),
     );
   }
 }

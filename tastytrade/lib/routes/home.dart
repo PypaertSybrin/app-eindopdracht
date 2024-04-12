@@ -71,9 +71,7 @@ class Home extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 16),
                       child: Recipe(
                         large: true,
-                        imageLocation: recipes[index].imageLocation,
-                        recipeName: recipes[index].recipeName,
-                        recipeCreator: recipes[index].createrName,
+                        recipe: recipes[index],
                       ),
                     );
                   }
@@ -83,18 +81,14 @@ class Home extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 16),
                       child: Recipe(
                         large: true,
-                        imageLocation: recipes[index].imageLocation,
-                        recipeName: recipes[index].recipeName,
-                        recipeCreator: recipes[index].createrName,
+                        recipe: recipes[index],
                       ),
                     );
                   }
                   // for other items
                   return Recipe(
                     large: true,
-                    imageLocation: recipes[index].imageLocation,
-                    recipeName: recipes[index].recipeName,
-                    recipeCreator: recipes[index].createrName,
+                    recipe: recipes[index],
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -130,9 +124,7 @@ class Home extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 16),
                       child: Recipe(
                         large: true,
-                        imageLocation: recipes[index].imageLocation,
-                        recipeName: recipes[index].recipeName,
-                        recipeCreator: recipes[index].createrName,
+                        recipe: recipes[index],
                       ),
                     );
                   }
@@ -142,18 +134,14 @@ class Home extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 16),
                       child: Recipe(
                         large: true,
-                        imageLocation: recipes[index].imageLocation,
-                        recipeName: recipes[index].recipeName,
-                        recipeCreator: recipes[index].createrName,
+                        recipe: recipes[index],
                       ),
                     );
                   }
                   // for other items
                   return Recipe(
                     large: true,
-                    imageLocation: recipes[index].imageLocation,
-                    recipeName: recipes[index].recipeName,
-                    recipeCreator: recipes[index].createrName,
+                    recipe: recipes[index],
                   );
                 },
                 separatorBuilder: (context, index) {

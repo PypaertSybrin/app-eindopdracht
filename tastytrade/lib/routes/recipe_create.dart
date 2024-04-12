@@ -20,10 +20,12 @@ class _Recipe extends State<RecipeCreate> {
   File? image;
   bool isLoading = false;
 
+  String docId = '';
   String imageLocation = '';
   String recipeName = '';
   String createrName = '';
   String createrUid = '';
+  String createrProfilePicture = '';
   int minutes = 0;
   int servings = 0;
   String category = '';
@@ -54,11 +56,14 @@ class _Recipe extends State<RecipeCreate> {
     String location = await getPictureReference();
     String createrName = FirebaseAuth.instance.currentUser!.displayName!;
     String createrUid = FirebaseAuth.instance.currentUser!.uid;
+    String createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
     final recipe = RecipeModel(
+        docId: docId,
         imageLocation: location,
         recipeName: recipeName,
         createrName: createrName,
         createrUid: createrUid,
+        createrProfilePicture: createrProfilePicture,
         minutes: minutes,
         servings: servings,
         category: category,
@@ -67,10 +72,12 @@ class _Recipe extends State<RecipeCreate> {
         likes: likes,
         date: DateTime.now());
     await FirebaseFirestore.instance.collection('recipes').add({
+      'DocId': recipe.docId,
       'ImageLocation': recipe.imageLocation,
       'RecipeName': recipe.recipeName,
       'CreaterName': recipe.createrName,
       'CreaterUid': recipe.createrUid,
+      'CreaterProfilePicture': recipe.createrProfilePicture,
       'Minutes': recipe.minutes,
       'Servings': recipe.servings,
       'Category': recipe.category,
@@ -78,6 +85,9 @@ class _Recipe extends State<RecipeCreate> {
       'Description': recipe.description,
       'Likes': recipe.likes,
       'Date': recipe.date,
+    }).then((DocumentReference doc) => {
+          doc.update({'DocId': doc.id}),
+          recipe.docId = doc.id,
     });
     setState(() {
       isLoading = false;

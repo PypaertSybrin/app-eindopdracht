@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:tastytrade/models/recipe_model.dart';
 
 class RecipeDetail extends StatelessWidget {
-  const RecipeDetail({super.key});
+  final RecipeModel recipe;
+  const RecipeDetail({super.key, required this.recipe});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,8 +20,8 @@ class RecipeDetail extends StatelessWidget {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.3,
-            child: Image.asset(
-              'assets/lunch.png',
+            child: Image.network(
+              recipe.imageLocation,
               fit: BoxFit.cover,
               width: MediaQuery.of(context).size.width,
             ),
@@ -32,9 +35,9 @@ class RecipeDetail extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Recipe Name',
-                        style: TextStyle(
+                      Text(
+                        recipe.recipeName,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -55,28 +58,28 @@ class RecipeDetail extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 12.0),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
                   child: Row(
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.access_time),
-                          Text('30 min'),
+                          const Icon(Icons.access_time),
+                          Text('${recipe.minutes.toString()} mins'),
                         ],
                       ),
-                      SizedBox(width: 24),
+                      const SizedBox(width: 24),
                       Row(
                         children: [
-                          Icon(Icons.person),
-                          Text('4 serves'),
+                          const Icon(Icons.person),
+                          Text('${recipe.servings.toString()} serves'),
                         ],
                       ),
-                      SizedBox(width: 24),
+                      const SizedBox(width: 24),
                       Row(
                         children: [
-                          Icon(Icons.dining),
-                          Text('Dinner'),
+                          const Icon(Icons.dining),
+                          Text(recipe.category),
                         ],
                       ),
                     ],
@@ -94,18 +97,16 @@ class RecipeDetail extends StatelessWidget {
                                     fontWeight: FontWeight.bold))),
                         Row(
                           children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey,
-                              ),
+                            CircleAvatar(
+                              radius: 32,
+                              backgroundImage:
+                                  Image.network(recipe.createrProfilePicture)
+                                      .image,
                             ),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Recipe Creator',
-                              style: TextStyle(
+                            Text(
+                              recipe.createrName,
+                              style: const TextStyle(
                                 fontSize: 16,
                               ),
                             ),
@@ -113,64 +114,51 @@ class RecipeDetail extends StatelessWidget {
                         ),
                       ],
                     )),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 12.0),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
                   child: Column(
                     children: [
-                      Align(
+                      const Align(
                         alignment: Alignment.centerLeft,
                         child: Text('Ingredients',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.circle),
-                                SizedBox(width: 8),
-                                Text('Ingredient 1'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.circle),
-                                SizedBox(width: 8),
-                                Text('Ingredient 2'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.circle),
-                                SizedBox(width: 8),
-                                Text('Ingredient 3'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: recipe.ingredients.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 4.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.circle, size: 10),
+                                    Text(recipe.ingredients[index]),
+                                  ],
+                                ),
+                              );
+                            },
+                          )),
                     ],
                   ),
                 ),
                 Container(
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: const Color(0xFFFFD2B3),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Instructions',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold))),
-                          Text(
-                              'qlmjflqkjf lqmsfjkqj fqqlkjfqmls jfqlsmfj lmkqsjflk qjslfj qlmksfj lmkqsjf lkqsjflkqjf lkmsjfklqs jflqs fjlkqsj flkqsj flkqmfj qlksfj qlksf jlskqmf jlmq flkqjflqsj fkqmlsj flqjlfmqfj sqlmkfjqsjfqlsmjflsqjfksq qslkfqslfjqksljflkqsjf qsfjkqslkmfjlksqjflkqsqm jflqsqjf qlsq fjqsqkjf mlf jslkfj qslmfj qslmfj qslfj qsmfjq skfmlqj fml dqmlj fm lqsjfqsklmfjqslmfj qsmfjkqslmjflqsjflqsmfjqsf mqslfkjqslfmjqslfj sqfjkl ksqlfjslqjfklsqjdfkldsjfldjsf lsqjfklqjsfkljqsflkjsqdlfjqslf jsqlkjflqsjflksqjfklqsf jqsljf slkqfj klqsfjlksq fjlqs fjkslqfj slkqfj lqksfj lkqsj flmqs fjlqs fj')
+                          const Text('Instructions',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(recipe.description)
                         ],
                       ),
                     ))

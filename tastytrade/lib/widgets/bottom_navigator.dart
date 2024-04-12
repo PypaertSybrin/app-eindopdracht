@@ -16,7 +16,7 @@ class BottomNavigator extends StatelessWidget {
 
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
-    const Favorites(),
+    Favorites(),
     const Planned(),
     Profile(),
   ];
