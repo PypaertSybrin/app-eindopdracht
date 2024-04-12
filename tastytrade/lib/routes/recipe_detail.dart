@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RecipeDetail extends StatelessWidget {
-  const RecipeDetail({Key? key}) : super(key: key);
+  const RecipeDetail({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

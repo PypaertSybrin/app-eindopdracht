@@ -7,11 +7,11 @@ class RecipePlanned extends StatelessWidget {
   final DateTime date;
 
   const RecipePlanned({
-    Key? key,
+    super.key,
     required this.imageLocation,
     required this.recipeName,
     required this.date,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

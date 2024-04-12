@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class RecipeModel {
   String imageLocation;
   String recipeName;
@@ -10,8 +8,7 @@ class RecipeModel {
   String category;
   List<String> ingredients;
   String description;
-  int likes;
-  int views;
+  List<String> likes;
   DateTime date;
   RecipeModel({
     required this.imageLocation,
@@ -24,7 +21,6 @@ class RecipeModel {
     required this.ingredients,
     required this.description,
     required this.likes,
-    required this.views,
     required this.date,
   });
 }

@@ -8,12 +8,11 @@ class Recipe extends StatelessWidget {
   final bool large;
 
   const Recipe(
-      {Key? key,
+      {super.key,
       required this.imageLocation,
       required this.recipeName,
       required this.recipeCreator,
-      required this.large})
-      : super(key: key);
+      required this.large});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,10 +50,7 @@ class Recipe extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Image.asset(
-                  imageLocation,
-                  fit: BoxFit.cover,
-                ),
+                child: Image.network(imageLocation, fit: BoxFit.cover),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,21 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/auth/sign_up.dart';
 import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  String email = '';
-  String password = '';
+  String email = 'sybrin.pypaert@student.howest.be';
+  String password = 'Sybrin1234';
   bool isLoading = false;
 
   void login() async {
@@ -23,27 +22,27 @@ class _LoginState extends State<Login> {
       isLoading = true;
     });
     if (email.isNotEmpty && password.isNotEmpty) {
-      print(email);
-      print(password);
+      // print(email);
+      // print(password);
 
       try {
         final credential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
         if (credential.user != null) {
+          await context.read<GetRecipes>().getAllRecipes();
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const BottomNavigator()),
+            MaterialPageRoute(builder: (context) => BottomNavigator()),
           );
-          setState(() {
+                  setState(() {
             isLoading = false;
           });
         }
-        print(credential.user);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          print('No user found for that email.');
+          // print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
+          // print('Wrong password provided for that user.');
         }
         setState(() {
           isLoading = false;
@@ -54,7 +53,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    print(context.read<GetRecipes>().getAllRecipes());
     return Scaffold(
       backgroundColor: const Color(0xFFFFD2B3),
       body: Padding(
@@ -146,7 +144,7 @@ class _LoginState extends State<Login> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignUp()),
+                          MaterialPageRoute(builder: (context) => const SignUp()),
                         );
                       },
                       child: const Text('Sign up',

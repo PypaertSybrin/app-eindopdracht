@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Category extends StatelessWidget {
   final String imageLocation;
   final String imageCaption;
 
-  Category(this.imageLocation, this.imageCaption);
+  const Category(this.imageLocation, this.imageCaption, {super.key});
 
   @override
   Widget build(BuildContext context) {

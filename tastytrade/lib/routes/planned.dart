@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tastytrade/widgets/recipe_planned.dart';
 
 class Planned extends StatelessWidget {
-  const Planned({Key? key}) : super(key: key);
+  const Planned({super.key});
   @override
   Widget build(BuildContext context) {
     return Padding(

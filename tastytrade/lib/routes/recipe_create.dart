@@ -9,8 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tastytrade/models/recipe_model.dart';
 
 class RecipeCreate extends StatefulWidget {
+  const RecipeCreate({super.key});
+
   @override
-  _Recipe createState() => _Recipe();
+  State<RecipeCreate> createState() => _Recipe();
 }
 
 class _Recipe extends State<RecipeCreate> {
@@ -27,8 +29,7 @@ class _Recipe extends State<RecipeCreate> {
   String category = '';
   List<String> ingredients = [];
   String description = '';
-  int likes = 0;
-  int views = 0;
+  List<String> likes = [];
 
   final List<String> categories = <String>[
     'Breakfast',
@@ -46,14 +47,13 @@ class _Recipe extends State<RecipeCreate> {
     return location;
   }
 
-  void SaveRecipe() async {
+  void saveRecipe() async {
     setState(() {
       isLoading = true;
     });
     String location = await getPictureReference();
     String createrName = FirebaseAuth.instance.currentUser!.displayName!;
     String createrUid = FirebaseAuth.instance.currentUser!.uid;
-    String date = DateTime.now().toString();
     final recipe = RecipeModel(
         imageLocation: location,
         recipeName: recipeName,
@@ -65,20 +65,18 @@ class _Recipe extends State<RecipeCreate> {
         ingredients: ingredients,
         description: description,
         likes: likes,
-        views: views,
         date: DateTime.now());
     await FirebaseFirestore.instance.collection('recipes').add({
-      'Image_Location': recipe.imageLocation,
-      'Recipe_Name': recipe.recipeName,
-      'Creater_Name': recipe.createrName,
-      'Creater_Uid': recipe.createrUid,
+      'ImageLocation': recipe.imageLocation,
+      'RecipeName': recipe.recipeName,
+      'CreaterName': recipe.createrName,
+      'CreaterUid': recipe.createrUid,
       'Minutes': recipe.minutes,
       'Servings': recipe.servings,
       'Category': recipe.category,
       'Ingredients': recipe.ingredients,
       'Description': recipe.description,
       'Likes': recipe.likes,
-      'Views': recipe.views,
       'Date': recipe.date,
     });
     setState(() {
@@ -318,7 +316,7 @@ class _Recipe extends State<RecipeCreate> {
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      SaveRecipe();
+                      saveRecipe();
                     },
                     child: Container(
                       width: double.infinity,
@@ -331,8 +329,8 @@ class _Recipe extends State<RecipeCreate> {
                         child: Center(
                             child: isLoading
                                 ? const SizedBox(
-                                    height: 30,
-                                    width: 30,
+                                    height: 24,
+                                    width: 24,
                                     child: CircularProgressIndicator(
                                         strokeWidth: 3, color: Colors.black))
                                 : const Text('Save Recipe',

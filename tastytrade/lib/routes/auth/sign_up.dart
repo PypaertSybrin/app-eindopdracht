@@ -4,10 +4,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+  const SignUp({super.key});
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -27,8 +29,8 @@ class _SignUpState extends State<SignUp> {
       isLoading = true;
     });
     if (email.isNotEmpty && password.isNotEmpty) {
-      print(email);
-      print(password);
+      // print(email);
+      // print(password);
 
       try {
         final credential = await FirebaseAuth.instance
@@ -38,21 +40,21 @@ class _SignUpState extends State<SignUp> {
           credential.user!.updateDisplayName(name);
           credential.user!.updatePhotoURL(await profileRef.putFile(image!).then(
               (value) => value.ref.getDownloadURL()));
-
+          context.read<GetRecipes>().getAllRecipes();
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const BottomNavigator()),
+            MaterialPageRoute(builder: (context) => BottomNavigator()),
           );
           setState(() {
             isLoading = false;
           });
         }
-        print(credential.user);
+        // print(credential.user);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          print('No user found for that email.');
+          // print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
+          // print('Wrong password provided for that user.');
         }
         setState(() {
           isLoading = false;

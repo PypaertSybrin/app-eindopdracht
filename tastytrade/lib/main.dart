@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tastytrade/firebase_options.dart';
 import 'package:tastytrade/routes/auth/login.dart';
 import 'package:tastytrade/services/get_recipes.dart';
+import 'package:tastytrade/utils/navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetRecipes()),
+        ChangeNotifierProvider(create: (_) => Navigation()),
       ],
       child: const MainApp(),
     ),

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/category.dart';
 import 'package:tastytrade/widgets/recipe.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final recipes = context.read<GetRecipes>().recipes;
+    // print("recipes length in home: ${recipes.length}");
+    // print(recipes.length);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
@@ -26,8 +31,8 @@ class Home extends StatelessWidget {
               ),
             ),
             const Title(title: 'Categories'),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
+            const Padding(
+              padding: EdgeInsets.only(left: 16, right: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -62,31 +67,35 @@ class Home extends StatelessWidget {
                 itemBuilder: (context, index) {
                   // if first item, add padding to the left
                   if (index == 0) {
-                    return const Padding(
-                      padding: EdgeInsets.only(left: 16),
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 16),
                       child: Recipe(
-                          large: true,
-                          imageLocation: 'assets/breakfast.png',
-                          recipeName: 'Recipe Namesssssssssssssssssssssssss',
-                          recipeCreator: 'Recipe Creatorsssssssssssssssssssss'),
+                        large: true,
+                        imageLocation: recipes[index].imageLocation,
+                        recipeName: recipes[index].recipeName,
+                        recipeCreator: recipes[index].createrName,
+                      ),
                     );
                   }
                   // if last item, add padding to the right
                   if (index == 4) {
-                    return const Padding(
-                      padding: EdgeInsets.only(right: 16),
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
                       child: Recipe(
-                          large: true,
-                          imageLocation: 'assets/breakfast.png',
-                          recipeName: 'Recipe Name',
-                          recipeCreator: 'Recipe Creator'),
+                        large: true,
+                        imageLocation: recipes[index].imageLocation,
+                        recipeName: recipes[index].recipeName,
+                        recipeCreator: recipes[index].createrName,
+                      ),
                     );
                   }
-                  return const Recipe(
-                      large: true,
-                      imageLocation: 'assets/breakfast.png',
-                      recipeName: 'Recipe Name',
-                      recipeCreator: 'Recipe Creator');
+                  // for other items
+                  return Recipe(
+                    large: true,
+                    imageLocation: recipes[index].imageLocation,
+                    recipeName: recipes[index].recipeName,
+                    recipeCreator: recipes[index].createrName,
+                  );
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(width: 16);
@@ -117,31 +126,35 @@ class Home extends StatelessWidget {
                 itemBuilder: (context, index) {
                   // if first item, add padding to the left
                   if (index == 0) {
-                    return const Padding(
-                      padding: EdgeInsets.only(left: 16),
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 16),
                       child: Recipe(
-                          large: true,
-                          imageLocation: 'assets/breakfast.png',
-                          recipeName: 'Recipe Name',
-                          recipeCreator: 'Recipe Creator'),
+                        large: true,
+                        imageLocation: recipes[index].imageLocation,
+                        recipeName: recipes[index].recipeName,
+                        recipeCreator: recipes[index].createrName,
+                      ),
                     );
                   }
                   // if last item, add padding to the right
                   if (index == 4) {
-                    return const Padding(
-                      padding: EdgeInsets.only(right: 16),
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
                       child: Recipe(
-                          large: true,
-                          imageLocation: 'assets/breakfast.png',
-                          recipeName: 'Recipe Name',
-                          recipeCreator: 'Recipe Creator'),
+                        large: true,
+                        imageLocation: recipes[index].imageLocation,
+                        recipeName: recipes[index].recipeName,
+                        recipeCreator: recipes[index].createrName,
+                      ),
                     );
                   }
-                  return const Recipe(
-                      large: true,
-                      imageLocation: 'assets/breakfast.png',
-                      recipeName: 'Recipe Name',
-                      recipeCreator: 'Recipe Creator');
+                  // for other items
+                  return Recipe(
+                    large: true,
+                    imageLocation: recipes[index].imageLocation,
+                    recipeName: recipes[index].recipeName,
+                    recipeCreator: recipes[index].createrName,
+                  );
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(width: 16);
@@ -158,7 +171,7 @@ class Home extends StatelessWidget {
 class Title extends StatelessWidget {
   final String title;
 
-  const Title({Key? key, required this.title}) : super(key: key);
+  const Title({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

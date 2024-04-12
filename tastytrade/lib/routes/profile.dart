@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:tastytrade/widgets/recipe.dart';
+import 'package:provider/provider.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/recipe_list.dart';
 
 class Profile extends StatelessWidget {
-  Profile({Key? key}) : super(key: key);
+  Profile({super.key});
 
   // get current user displayname
   final User? user = FirebaseAuth.instance.currentUser;
@@ -78,7 +77,8 @@ class Profile extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(child: RecipeList()),
+        Expanded(
+            child: RecipeList(recipes: context.read<GetRecipes>().recipes)),
       ],
     );
   }
