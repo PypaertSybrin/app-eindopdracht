@@ -6,9 +6,11 @@ class GetRecipes with ChangeNotifier {
   final List<RecipeModel> _recipes = [];
   final List<RecipeModel> _userRecipes = [];
   final List<RecipeModel> _likedRecipes = [];
+  final List<RecipeModel> _mealPlans = [];
   List<RecipeModel> get recipes => _recipes;
   List<RecipeModel> get userRecipes => _userRecipes;
   List<RecipeModel> get likedRecipes => _likedRecipes;
+  List<RecipeModel> get mealPlans => _mealPlans;
 
   // get all recipes from firebase
   Future<List<RecipeModel>> getAllRecipes() async {
@@ -29,6 +31,7 @@ class GetRecipes with ChangeNotifier {
           ingredients: List<String>.from(element['Ingredients']),
           description: element['Description'],
           likes: List<String>.from(element['Likes']),
+          mealPlans: List<Map<String, dynamic>>.from(element['MealPlans']),
           date: element['Date'].toDate(),
         );
         newListRecipes.add(recipe);
@@ -41,7 +44,7 @@ class GetRecipes with ChangeNotifier {
   }
 
   // get recipes by user
-  List<RecipeModel> getRecipesByUser(String uid) {
+  void updateRecipesByUser(String uid) {
     List<RecipeModel> userRecipes = [];
     for (var recipe in _recipes) {
       if (recipe.createrUid == uid) {
@@ -51,11 +54,10 @@ class GetRecipes with ChangeNotifier {
     _userRecipes.clear();
     _userRecipes.addAll(userRecipes);
     notifyListeners();
-    return _userRecipes;
   }
 
   // get recipes you liked
-  List<RecipeModel> getRecipesByLiked(String uid) {
+  void updateRecipesByLiked(String uid) {
     List<RecipeModel> likedRecipes = [];
     for (var recipe in _recipes) {
       if (recipe.likes.contains(uid)) {
@@ -65,7 +67,21 @@ class GetRecipes with ChangeNotifier {
     _likedRecipes.clear();
     _likedRecipes.addAll(likedRecipes);
     notifyListeners();
-    return likedRecipes;
+  }
+
+  // get meal plans by user
+  void updateMealPlansByUser(String uid) {
+    List<RecipeModel> mealPlans = [];
+    for (var recipe in _recipes) {
+      for (var mealPlan in recipe.mealPlans) {
+        if (mealPlan['UserUid'] == uid) {
+          mealPlans.add(recipe);
+        }
+      }
+    }
+    _mealPlans.clear();
+    _mealPlans.addAll(mealPlans);
+    notifyListeners();
   }
 
   // add a recipe
@@ -84,6 +100,7 @@ class GetRecipes with ChangeNotifier {
       'Ingredients': recipe.ingredients,
       'Description': recipe.description,
       'Likes': recipe.likes,
+      'MealPlans': recipe.mealPlans,
       'Date': recipe.date,
     }).then((DocumentReference doc) => {
               doc.update({'DocId': doc.id}),
@@ -91,10 +108,9 @@ class GetRecipes with ChangeNotifier {
             });
     // get new recipe from firebase so that the local recipe also has the docId
     _recipes.add(recipe);
-    getRecipesByUser(recipe.createrUid);
+    updateRecipesByUser(recipe.createrUid);
     notifyListeners();
   }
-
 
   // update a recipe
   // Future updateRecipe(RecipeModel recipe) async {
@@ -140,7 +156,7 @@ class GetRecipes with ChangeNotifier {
     // check if you liked the recipe to update the like button
     checkIfLiked(docId, uid);
     // recepten ophalen die je geliked hebt om je favorites te updaten
-    getRecipesByLiked(uid);
+    updateRecipesByLiked(uid);
     // update recipe in firebase
     await updateRecipeLikes(recipe);
     notifyListeners();
@@ -158,10 +174,75 @@ class GetRecipes with ChangeNotifier {
     return recipe.likes.contains(uid);
   }
 
-  // KOMENDE DINGEN EERST TE DOEN
-  // recepten ophalen per user, met watch zoals in favorites zal hij automatisch kunnen updaten, gewoon bij aanmaken de lijst opnieuw opvragen (denk ik)
+  // check if user already has a shoppinglist for that recipe, if not add one, if(true) only update the date
+  Future addMealPlan(String docId, String uid, DateTime date) async {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    recipe.mealPlans.add({
+      'UserUid': uid,
+      'Date': date,
+      'ShoppingList': recipe.ingredients,
+    });
+    updateMealPlansByUser(uid);
+    await FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(docId)
+        .update({'MealPlans': recipe.mealPlans});
+    notifyListeners();
+  }
 
-  // wanneer je op recept detail klikt, ook de likes ophalen en dan checken of je het geliked hebt of niet
+  // check if user has a meal plan
+  bool checkIfCertainShoppingListExist(String docId, String uid) {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    return recipe.mealPlans.any((element) => element['UserUid'] == uid);
+  }
+
+  // get date of a meal plan
+  DateTime getDate(String docId, String uid) {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    final mealPlan =
+        recipe.mealPlans.firstWhere((element) => element['UserUid'] == uid);
+    try {
+      return mealPlan['Date'];
+    } catch (e) {
+      return convertToDate(mealPlan['Date']);
+    }
+  }
+
+  DateTime convertToDate(Timestamp timestamp) {
+    return timestamp.toDate();
+  }
+
+  // delete meal plan
+  Future deleteMealPlan(String docId, String uid) async {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    recipe.mealPlans.removeWhere((element) => element['UserUid'] == uid);
+    updateMealPlansByUser(uid);
+    await FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(docId)
+        .update({'MealPlans': recipe.mealPlans});
+    notifyListeners();
+  }
+
+  // check if ingredient is in shopping list
+  bool checkIfIngredientInShoppingList(
+      String docId, String uid, String ingredient) {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    final mealPlan =
+        recipe.mealPlans.firstWhere((element) => element['UserUid'] == uid);
+    return !mealPlan['ShoppingList'].contains(ingredient);
+  }
+
+  // get shopping list
+  bool _getValue = false;
+  bool get getValue => _getValue;
+  bool changeValue(value) {
+    _getValue = value;
+    notifyListeners();
+    return !value;
+  }
+
+  
 
   // voor recipe list zodat het update in je profile, een string meegeven ipv recipes en dan ifs en dan reads doen
 

@@ -41,8 +41,9 @@ class _SignUpState extends State<SignUp> {
           credential.user!.updatePhotoURL(await profileRef.putFile(image!).then(
               (value) => value.ref.getDownloadURL()));
           await context.read<GetRecipes>().getAllRecipes();
-          context.read<GetRecipes>().getRecipesByLiked(credential.user!.uid);
-          context.read<GetRecipes>().getRecipesByUser(credential.user!.uid);
+          context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
+          context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
+          context.read<GetRecipes>().updateMealPlansByUser(credential.user!.uid);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => BottomNavigator()),

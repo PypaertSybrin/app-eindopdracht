@@ -11,6 +11,7 @@ class RecipeModel {
   List<String> ingredients;
   String description;
   List<String> likes;
+  List<Map<String, dynamic>> mealPlans;
   DateTime date;
   RecipeModel({
     required this.docId,
@@ -25,6 +26,7 @@ class RecipeModel {
     required this.ingredients,
     required this.description,
     required this.likes,
+    required this.mealPlans,
     required this.date,
   });
 }

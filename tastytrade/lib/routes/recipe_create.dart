@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +33,7 @@ class _Recipe extends State<RecipeCreate> {
   List<String> ingredients = [];
   String description = '';
   List<String> likes = [];
+  List<Map<String, dynamic>> mealPlans = [];
 
   final List<String> categories = <String>[
     'Breakfast',
@@ -60,7 +60,6 @@ class _Recipe extends State<RecipeCreate> {
     String createrUid = FirebaseAuth.instance.currentUser!.uid;
     String createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
 
-
     final recipe = RecipeModel(
         docId: docId,
         imageLocation: location,
@@ -74,6 +73,7 @@ class _Recipe extends State<RecipeCreate> {
         ingredients: ingredients,
         description: description,
         likes: likes,
+        mealPlans: mealPlans,
         date: DateTime.now());
 
     await context.read<GetRecipes>().addRecipe(recipe);

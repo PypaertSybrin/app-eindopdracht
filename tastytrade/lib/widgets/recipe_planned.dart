@@ -1,17 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tastytrade/models/recipe_model.dart';
+import 'package:tastytrade/routes/recipe_detail.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 
 class RecipePlanned extends StatelessWidget {
-  final String imageLocation;
-  final String recipeName;
-  final DateTime date;
+  final RecipeModel recipe;
 
-  const RecipePlanned({
+  RecipePlanned({
     super.key,
-    required this.imageLocation,
-    required this.recipeName,
-    required this.date,
+    required this.recipe,
   });
+
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,14 @@ class RecipePlanned extends StatelessWidget {
         ],
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecipeDetail(recipe: recipe, shoppingList: true),
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Stack(
@@ -44,8 +54,8 @@ class RecipePlanned extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Image.asset(
-                      imageLocation,
+                    child: Image.network(
+                      recipe.imageLocation,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -56,7 +66,7 @@ class RecipePlanned extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            recipeName,
+                            recipe.recipeName,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -64,7 +74,9 @@ class RecipePlanned extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            DateFormat.Md().format(date),
+                            DateFormat('dd-MM').format(context
+                                .read<GetRecipes>()
+                                .getDate(recipe.docId, user!.uid)),
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontSize: 18,
@@ -80,7 +92,11 @@ class RecipePlanned extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    context
+                        .read<GetRecipes>()
+                        .deleteMealPlan(recipe.docId, user!.uid);
+                  },
                   child: const Icon(
                     Icons.delete,
                   ),

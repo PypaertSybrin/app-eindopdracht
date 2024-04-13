@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:tastytrade/routes/recipe_create.dart';
 import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/recipe_list.dart';
 
@@ -29,56 +31,84 @@ class Profile extends StatelessWidget {
           child: Padding(
             padding:
                 const EdgeInsets.only(top: 64, left: 16, right: 16, bottom: 32),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 32,
-                      backgroundImage: user!.photoURL != null
-                          ? NetworkImage(user!.photoURL.toString())
-                          : null,
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 32,
+                          backgroundImage: user!.photoURL != null
+                              ? NetworkImage(user!.photoURL.toString())
+                              : null,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          user!.displayName.toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      user!.displayName.toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('4',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text('Recipes',
+                                style: TextStyle(color: Colors.grey[700])),
+                          ],
+                        ),
+                        const SizedBox(width: 24),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('5.1k',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text('Total likes',
+                                style: TextStyle(color: Colors.grey[700])),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('4',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Recipes',
-                            style: TextStyle(color: Colors.grey[700])),
-                      ],
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RecipeCreate()));
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    const SizedBox(width: 24),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('5.1k',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Total likes',
-                            style: TextStyle(color: Colors.grey[700])),
-                      ],
+                    child: Center(
+                      child: Text('Add a recipe',
+                          style: TextStyle(
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.bold)),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
         Expanded(
-            child: RecipeList(recipes: context.watch<GetRecipes>().userRecipes)),
+            child:
+                RecipeList(recipes: context.watch<GetRecipes>().userRecipes)),
       ],
     );
   }

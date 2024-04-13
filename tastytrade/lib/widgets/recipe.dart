@@ -13,13 +13,6 @@ class Recipe extends StatelessWidget {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  // void addOrRemoveLike(BuildContext context) {
-  //   if (context.read<GetRecipes>().checkIfLiked(recipe.docId, recipe.createrUid)) {
-  //     removeLike(context);
-  //   } else {
-  //     addLike(context);
-  //   }
-  // }
   Future<void> addOrRemoveLike(
       BuildContext context, String docId, String uid) async {
     await context.read<GetRecipes>().addOrRemoveLike(docId, uid);
@@ -47,7 +40,7 @@ class Recipe extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => RecipeDetail(recipe: recipe)),
+                builder: (context) => RecipeDetail(recipe: recipe, shoppingList: false)),
           );
         },
         child: Padding(

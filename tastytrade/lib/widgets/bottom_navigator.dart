@@ -34,16 +34,16 @@ class BottomNavigator extends StatelessWidget {
               automaticallyImplyLeading: false,
             )
           : null,
-      floatingActionButton: context.watch<Navigation>().currentIndex == 3
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const RecipeCreate()));
-              },
-              backgroundColor: const Color(0xFFFF8737),
-              child: const Icon(Icons.add),
-            )
-          : null,
+      // floatingActionButton: context.watch<Navigation>().currentIndex == 3
+      //     ? FloatingActionButton(
+      //         onPressed: () {
+      //           Navigator.push(context,
+      //               MaterialPageRoute(builder: (context) => const RecipeCreate()));
+      //         },
+      //         backgroundColor: const Color(0xFFFF8737),
+      //         child: const Icon(Icons.add),
+      //       )
+      //     : null,
       backgroundColor: const Color(0xFFFFD2B3),
       bottomNavigationBar: Theme(
         data: ThemeData(
