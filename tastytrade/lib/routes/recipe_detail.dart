@@ -1,10 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:tastytrade/models/recipe_model.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 
 class RecipeDetail extends StatelessWidget {
   final RecipeModel recipe;
-  const RecipeDetail({super.key, required this.recipe});
+  RecipeDetail({super.key, required this.recipe});
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  Future<void> addOrRemoveLike(
+      BuildContext context, String docId, String uid) async {
+    await context.read<GetRecipes>().addOrRemoveLike(docId, uid);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,15 +54,24 @@ class RecipeDetail extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                              size: 20.0,
-                            ),
-                          ),
-                          const Text('1.3k'),
+                              GestureDetector(
+                                  onTap: () {
+                                    addOrRemoveLike(
+                                        context, recipe.docId, user!.uid);
+                                  },
+                                  child: Icon(
+                                    context.watch<GetRecipes>().checkIfLiked(
+                                            recipe.docId, user!.uid)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: const Color(0xFFFF8737),
+                                    size: 20.0,
+                                  ),
+                                ),
+                          Text(context
+                              .watch<GetRecipes>()
+                              .getLikes(recipe.docId)
+                              .toString()),
                         ],
                       )
                     ],

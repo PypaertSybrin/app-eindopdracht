@@ -13,7 +13,6 @@ class Recipe extends StatelessWidget {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-
   // void addOrRemoveLike(BuildContext context) {
   //   if (context.read<GetRecipes>().checkIfLiked(recipe.docId, recipe.createrUid)) {
   //     removeLike(context);
@@ -21,14 +20,9 @@ class Recipe extends StatelessWidget {
   //     addLike(context);
   //   }
   // }
-  Future<void> addLike(BuildContext context) async {
-    await context.read<GetRecipes>().addLike(recipe.docId, user!.uid);
-  }
-
-  Future<void> removeLike(BuildContext context) async {
-    await context
-        .read<GetRecipes>()
-        .removeLike(recipe.docId, user!.uid);
+  Future<void> addOrRemoveLike(
+      BuildContext context, String docId, String uid) async {
+    await context.read<GetRecipes>().addOrRemoveLike(docId, uid);
   }
 
   @override
@@ -92,9 +86,7 @@ class Recipe extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      context.read<GetRecipes>().checkIfLiked(recipe.docId, user!.uid)
-                          ? removeLike(context)
-                          : addLike(context);
+                      addOrRemoveLike(context, recipe.docId, user!.uid);
                     },
                     child: Icon(
                       context
@@ -102,7 +94,7 @@ class Recipe extends StatelessWidget {
                               .checkIfLiked(recipe.docId, user!.uid)
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: Color(0xFFFF8737),
+                      color: const Color(0xFFFF8737),
                       size: 20.0,
                     ),
                   ),

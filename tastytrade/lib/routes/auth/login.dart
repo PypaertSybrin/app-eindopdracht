@@ -17,7 +17,7 @@ class _LoginState extends State<Login> {
   String password = 'Sybrin1234';
   bool isLoading = false;
 
-  void login() async {
+  Future<void> login() async {
     setState(() {
       isLoading = true;
     });

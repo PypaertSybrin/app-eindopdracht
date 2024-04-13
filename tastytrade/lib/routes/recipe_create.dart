@@ -6,7 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tastytrade/models/recipe_model.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 
 class RecipeCreate extends StatefulWidget {
   const RecipeCreate({super.key});
@@ -49,7 +51,7 @@ class _Recipe extends State<RecipeCreate> {
     return location;
   }
 
-  void saveRecipe() async {
+  Future<void> saveRecipe(BuildContext context) async {
     setState(() {
       isLoading = true;
     });
@@ -57,6 +59,8 @@ class _Recipe extends State<RecipeCreate> {
     String createrName = FirebaseAuth.instance.currentUser!.displayName!;
     String createrUid = FirebaseAuth.instance.currentUser!.uid;
     String createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
+
+
     final recipe = RecipeModel(
         docId: docId,
         imageLocation: location,
@@ -71,24 +75,9 @@ class _Recipe extends State<RecipeCreate> {
         description: description,
         likes: likes,
         date: DateTime.now());
-    await FirebaseFirestore.instance.collection('recipes').add({
-      'DocId': recipe.docId,
-      'ImageLocation': recipe.imageLocation,
-      'RecipeName': recipe.recipeName,
-      'CreaterName': recipe.createrName,
-      'CreaterUid': recipe.createrUid,
-      'CreaterProfilePicture': recipe.createrProfilePicture,
-      'Minutes': recipe.minutes,
-      'Servings': recipe.servings,
-      'Category': recipe.category,
-      'Ingredients': recipe.ingredients,
-      'Description': recipe.description,
-      'Likes': recipe.likes,
-      'Date': recipe.date,
-    }).then((DocumentReference doc) => {
-          doc.update({'DocId': doc.id}),
-          recipe.docId = doc.id,
-    });
+
+    await context.read<GetRecipes>().addRecipe(recipe);
+
     setState(() {
       isLoading = false;
     });
@@ -326,7 +315,7 @@ class _Recipe extends State<RecipeCreate> {
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      saveRecipe();
+                      saveRecipe(context);
                     },
                     child: Container(
                       width: double.infinity,

@@ -24,7 +24,7 @@ class _SignUpState extends State<SignUp> {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  void signUp() async {
+  Future<void> signUp() async {
     setState(() {
       isLoading = true;
     });

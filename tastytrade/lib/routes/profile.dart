@@ -78,7 +78,7 @@ class Profile extends StatelessWidget {
           ),
         ),
         Expanded(
-            child: RecipeList(recipes: context.read<GetRecipes>().userRecipes)),
+            child: RecipeList(recipes: context.watch<GetRecipes>().userRecipes)),
       ],
     );
   }
