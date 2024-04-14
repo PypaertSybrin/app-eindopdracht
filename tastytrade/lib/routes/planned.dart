@@ -7,7 +7,7 @@ class Planned extends StatelessWidget {
   const Planned({super.key});
   @override
   Widget build(BuildContext context) {
-    final recipes = context.watch<GetRecipes>().mealPlans;
+    final recipes = context.watch<GetRecipes>().shoppingLists;
     return recipes.isNotEmpty
         ? Padding(
             padding: const EdgeInsets.all(16),

@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
           await context.read<GetRecipes>().getAllRecipes();
           context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
           context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
-          context.read<GetRecipes>().updateMealPlansByUser(credential.user!.uid);
+          context.read<GetRecipes>().updateShoppingListsPerUser(credential.user!.uid);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => BottomNavigator()),

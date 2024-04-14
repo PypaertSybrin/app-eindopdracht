@@ -33,7 +33,7 @@ class _Recipe extends State<RecipeCreate> {
   List<String> ingredients = [];
   String description = '';
   List<String> likes = [];
-  List<Map<String, dynamic>> mealPlans = [];
+  List<Map<String, dynamic>> shoppingLists = [];
 
   final List<String> categories = <String>[
     'Breakfast',
@@ -73,7 +73,7 @@ class _Recipe extends State<RecipeCreate> {
         ingredients: ingredients,
         description: description,
         likes: likes,
-        mealPlans: mealPlans,
+        shoppingLists: shoppingLists,
         date: DateTime.now());
 
     await context.read<GetRecipes>().addRecipe(recipe);

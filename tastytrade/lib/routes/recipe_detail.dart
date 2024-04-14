@@ -30,7 +30,7 @@ class RecipeDetail extends StatelessWidget {
       DateTime selectedDate = date;
       await context
           .read<GetRecipes>()
-          .addMealPlan(recipe.docId, user!.uid, selectedDate);
+          .createShoppingList(recipe.docId, user!.uid, selectedDate);
       date = null;
     }
   }
@@ -101,13 +101,15 @@ class RecipeDetail extends StatelessWidget {
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               color: const Color(0xFFFF8737),
-                              size: 20.0,
+                              size: 24.0,
                             ),
                           ),
-                          Text(context
-                              .watch<GetRecipes>()
-                              .getLikes(recipe.docId)
-                              .toString()),
+                          Text(
+                              context
+                                  .watch<GetRecipes>()
+                                  .getLikes(recipe.docId)
+                                  .toString(),
+                              style: const TextStyle(fontSize: 16)),
                         ],
                       )
                     ],
@@ -189,13 +191,21 @@ class RecipeDetail extends StatelessWidget {
                                   ? CheckboxListTile(
                                       title: Text(recipe.ingredients[index]),
                                       value: context
-                                          .read<GetRecipes>()
+                                          .watch<GetRecipes>()
                                           .checkIfIngredientInShoppingList(
                                               recipe.docId,
                                               user!.uid,
                                               recipe.ingredients[index]),
+                                      activeColor: const Color(0xFFFF8737),
                                       onChanged: (bool? value) {
-                                        
+                                        // Update the checkbox state
+                                        context
+                                            .read<GetRecipes>()
+                                            .addOrRemoveIngredientFromShoppingList(
+                                                recipe.docId,
+                                                user!.uid,
+                                                recipe.ingredients[index],
+                                                value!);
                                       },
                                       controlAffinity:
                                           ListTileControlAffinity.leading,

@@ -6,11 +6,11 @@ class GetRecipes with ChangeNotifier {
   final List<RecipeModel> _recipes = [];
   final List<RecipeModel> _userRecipes = [];
   final List<RecipeModel> _likedRecipes = [];
-  final List<RecipeModel> _mealPlans = [];
+  final List<RecipeModel> _shoppingLists = [];
   List<RecipeModel> get recipes => _recipes;
   List<RecipeModel> get userRecipes => _userRecipes;
   List<RecipeModel> get likedRecipes => _likedRecipes;
-  List<RecipeModel> get mealPlans => _mealPlans;
+  List<RecipeModel> get shoppingLists => _shoppingLists;
 
   // get all recipes from firebase
   Future<List<RecipeModel>> getAllRecipes() async {
@@ -31,7 +31,8 @@ class GetRecipes with ChangeNotifier {
           ingredients: List<String>.from(element['Ingredients']),
           description: element['Description'],
           likes: List<String>.from(element['Likes']),
-          mealPlans: List<Map<String, dynamic>>.from(element['MealPlans']),
+          shoppingLists:
+              List<Map<String, dynamic>>.from(element['ShoppingLists']),
           date: element['Date'].toDate(),
         );
         newListRecipes.add(recipe);
@@ -70,17 +71,17 @@ class GetRecipes with ChangeNotifier {
   }
 
   // get meal plans by user
-  void updateMealPlansByUser(String uid) {
-    List<RecipeModel> mealPlans = [];
+  void updateShoppingListsPerUser(String uid) {
+    List<RecipeModel> shoppingList = [];
     for (var recipe in _recipes) {
-      for (var mealPlan in recipe.mealPlans) {
-        if (mealPlan['UserUid'] == uid) {
-          mealPlans.add(recipe);
+      for (var list in recipe.shoppingLists) {
+        if (list['UserUid'] == uid) {
+          shoppingList.add(recipe);
         }
       }
     }
-    _mealPlans.clear();
-    _mealPlans.addAll(mealPlans);
+    _shoppingLists.clear();
+    _shoppingLists.addAll(shoppingList);
     notifyListeners();
   }
 
@@ -100,7 +101,7 @@ class GetRecipes with ChangeNotifier {
       'Ingredients': recipe.ingredients,
       'Description': recipe.description,
       'Likes': recipe.likes,
-      'MealPlans': recipe.mealPlans,
+      'ShoppingLists': recipe.shoppingLists,
       'Date': recipe.date,
     }).then((DocumentReference doc) => {
               doc.update({'DocId': doc.id}),
@@ -175,32 +176,73 @@ class GetRecipes with ChangeNotifier {
   }
 
   // check if user already has a shoppinglist for that recipe, if not add one, if(true) only update the date
-  Future addMealPlan(String docId, String uid, DateTime date) async {
+  Future createShoppingList(String docId, String uid, DateTime date) async {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
-    recipe.mealPlans.add({
-      'UserUid': uid,
-      'Date': date,
-      'ShoppingList': recipe.ingredients,
-    });
-    updateMealPlansByUser(uid);
+    if (checkIfCertainShoppingListExist(docId, uid)) {
+      recipe.shoppingLists
+          .firstWhere((element) => element['UserUid'] == uid)['Date'] = date;
+    } else {
+      recipe.shoppingLists.add({
+        'UserUid': uid,
+        'Date': date,
+        'List': recipe.ingredients,
+      });
+    }
+    updateShoppingListsPerUser(uid);
     await FirebaseFirestore.instance
         .collection('recipes')
         .doc(docId)
-        .update({'MealPlans': recipe.mealPlans});
+        .update({'ShoppingLists': recipe.shoppingLists});
     notifyListeners();
+  }
+
+  // Update the checkbox state in the shopping list
+  void addOrRemoveIngredientFromShoppingList(
+      String docId, String uid, String ingredient, bool value) {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    final shoppingListIndex =
+        recipe.shoppingLists.indexWhere((element) => element['UserUid'] == uid);
+
+    // Update the checkbox state in the shopping list
+    final shoppingList = recipe.shoppingLists[shoppingListIndex];
+    final List<String> ingredients = List<String>.from(shoppingList['List']);
+    if (!value) {
+      // Add the ingredient to the shopping list
+      ingredients.add(ingredient);
+    } else {
+      // Remove the ingredient from the shopping list
+      ingredients.remove(ingredient);
+    }
+
+    // Update the shopping list in the recipe
+    recipe.shoppingLists[shoppingListIndex]['List'] = ingredients;
+
+    // Update the shopping list in Firestore
+    updateShoppingListInFirestore(docId, recipe.shoppingLists);
+
+    notifyListeners();
+  }
+
+// Update the shopping list in Firestore
+  Future<void> updateShoppingListInFirestore(
+      String docId, List<Map<String, dynamic>> shoppingLists) async {
+    await FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(docId)
+        .update({'ShoppingLists': shoppingLists});
   }
 
   // check if user has a meal plan
   bool checkIfCertainShoppingListExist(String docId, String uid) {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
-    return recipe.mealPlans.any((element) => element['UserUid'] == uid);
+    return recipe.shoppingLists.any((element) => element['UserUid'] == uid);
   }
 
   // get date of a meal plan
   DateTime getDate(String docId, String uid) {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
     final mealPlan =
-        recipe.mealPlans.firstWhere((element) => element['UserUid'] == uid);
+        recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid);
     try {
       return mealPlan['Date'];
     } catch (e) {
@@ -215,12 +257,12 @@ class GetRecipes with ChangeNotifier {
   // delete meal plan
   Future deleteMealPlan(String docId, String uid) async {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
-    recipe.mealPlans.removeWhere((element) => element['UserUid'] == uid);
-    updateMealPlansByUser(uid);
+    recipe.shoppingLists.removeWhere((element) => element['UserUid'] == uid);
+    updateShoppingListsPerUser(uid);
     await FirebaseFirestore.instance
         .collection('recipes')
         .doc(docId)
-        .update({'MealPlans': recipe.mealPlans});
+        .update({'ShoppingLists': recipe.shoppingLists});
     notifyListeners();
   }
 
@@ -228,21 +270,10 @@ class GetRecipes with ChangeNotifier {
   bool checkIfIngredientInShoppingList(
       String docId, String uid, String ingredient) {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
-    final mealPlan =
-        recipe.mealPlans.firstWhere((element) => element['UserUid'] == uid);
-    return !mealPlan['ShoppingList'].contains(ingredient);
+    final shoppingList =
+        recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid);
+    return !shoppingList['List'].contains(ingredient);
   }
-
-  // get shopping list
-  bool _getValue = false;
-  bool get getValue => _getValue;
-  bool changeValue(value) {
-    _getValue = value;
-    notifyListeners();
-    return !value;
-  }
-
-  
 
   // voor recipe list zodat het update in je profile, een string meegeven ipv recipes en dan ifs en dan reads doen
 
