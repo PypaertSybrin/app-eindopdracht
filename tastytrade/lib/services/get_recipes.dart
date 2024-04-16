@@ -85,10 +85,20 @@ class GetRecipes with ChangeNotifier {
     notifyListeners();
   }
 
+  // sort recipes by category
+  List<RecipeModel> getRecipesByCategory(String category) {
+    List<RecipeModel> categoryRecipes = [];
+    for (var recipe in _recipes) {
+      if (recipe.category == category) {
+        categoryRecipes.add(recipe);
+      }
+    }
+    return categoryRecipes;
+  }
+
   // add a recipe
   Future addRecipe(RecipeModel recipe) async {
-    final newRecipe =
-        await FirebaseFirestore.instance.collection('recipes').add({
+    await FirebaseFirestore.instance.collection('recipes').add({
       'DocId': recipe.docId,
       'ImageLocation': recipe.imageLocation,
       'RecipeName': recipe.recipeName,
@@ -104,9 +114,9 @@ class GetRecipes with ChangeNotifier {
       'ShoppingLists': recipe.shoppingLists,
       'Date': recipe.date,
     }).then((DocumentReference doc) => {
-              doc.update({'DocId': doc.id}),
-              recipe.docId = doc.id,
-            });
+          doc.update({'DocId': doc.id}),
+          recipe.docId = doc.id,
+        });
     // get new recipe from firebase so that the local recipe also has the docId
     _recipes.add(recipe);
     updateRecipesByUser(recipe.createrUid);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tastytrade/routes/filter.dart';
 import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/category.dart';
 import 'package:tastytrade/widgets/recipe.dart';
@@ -50,7 +51,11 @@ class Home extends StatelessWidget {
               children: [
                 const Title(title: 'Popular Recipes'),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return Filter(filter: 'Popular Recipes', isCategory: false, recipes: recipes);
+                    }));
+                  },
                   child: const Text(
                     'View all',
                     style: TextStyle(color: Colors.black),
@@ -103,7 +108,11 @@ class Home extends StatelessWidget {
               children: [
                 const Title(title: 'New Recipes'),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return Filter(filter: 'New Recipes', isCategory: false, recipes: recipes);
+                    }));
+                  },
                   child: const Text('View all',
                       style: TextStyle(
                         color: Colors.black,

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tastytrade/routes/filter.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 
 class Category extends StatelessWidget {
   final String imageLocation;
-  final String imageCaption;
+  final String category;
 
-  const Category(this.imageLocation, this.imageCaption, {super.key});
+  const Category(this.imageLocation, this.category, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,15 @@ class Category extends StatelessWidget {
         ],
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return Filter(
+                filter: category,
+                isCategory: true,
+                recipes:
+                    context.read<GetRecipes>().getRecipesByCategory(category));
+          }));
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -42,7 +53,7 @@ class Category extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Center(
-                  child: Text(imageCaption,
+                  child: Text(category,
                       style: const TextStyle(fontWeight: FontWeight.bold))),
             ],
           ),
