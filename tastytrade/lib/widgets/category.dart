@@ -26,12 +26,11 @@ class Category extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
+          context.read<GetRecipes>().sortRecipesByCategoryAndDate(category, false);
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return Filter(
                 filter: category,
-                isCategory: true,
-                recipes:
-                    context.read<GetRecipes>().getRecipesByCategory(category));
+                isCategory: true);
           }));
         },
         child: Padding(

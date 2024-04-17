@@ -1,16 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tastytrade/models/recipe_model.dart';
+import 'package:tastytrade/widgets/recipe.dart';
 
 class GetRecipes with ChangeNotifier {
+  // alle recipes
   final List<RecipeModel> _recipes = [];
+  // recipes van de huidige user
   final List<RecipeModel> _userRecipes = [];
+  // recipes die je geliked hebt
   final List<RecipeModel> _likedRecipes = [];
+  // recipes die je als meal plan hebt
   final List<RecipeModel> _shoppingLists = [];
+  // recipes die je wilt filteren in filtered screen
+  final List<RecipeModel> _filteredList = [];
+  // recipes gefilterd op likes in home screen
+  final List<RecipeModel> _top5ByLikes = [];
+  // recipes gefilterd op datum in home screen
+  final List<RecipeModel> _top5ByDate = [];
   List<RecipeModel> get recipes => _recipes;
   List<RecipeModel> get userRecipes => _userRecipes;
   List<RecipeModel> get likedRecipes => _likedRecipes;
   List<RecipeModel> get shoppingLists => _shoppingLists;
+  List<RecipeModel> get filteredList => _filteredList;
+  List<RecipeModel> get top5ByLikes => _top5ByLikes;
+  List<RecipeModel> get top5ByDate => _top5ByDate;
 
   // get all recipes from firebase
   Future<List<RecipeModel>> getAllRecipes() async {
@@ -40,6 +54,8 @@ class GetRecipes with ChangeNotifier {
     });
     _recipes.clear();
     _recipes.addAll(newListRecipes);
+    top5RecipesByLikes();
+    top5RecipesByDate();
     notifyListeners();
     return _recipes;
   }
@@ -85,15 +101,53 @@ class GetRecipes with ChangeNotifier {
     notifyListeners();
   }
 
-  // sort recipes by category
-  List<RecipeModel> getRecipesByCategory(String category) {
-    List<RecipeModel> categoryRecipes = [];
+  // sort recipes by date descending
+  void top5RecipesByDate() {
+    List<RecipeModel> sortedList = List.from(_recipes);
+    sortedList.sort((a, b) => b.date.compareTo(a.date));
+    _top5ByDate.clear();
+    _top5ByDate.addAll(sortedList);
+    notifyListeners();
+  }
+
+  // sort recipes by likes
+  void top5RecipesByLikes() {
+    List<RecipeModel> sortedList = List.from(_recipes);
+    sortedList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
+    _top5ByLikes.clear();
+    _top5ByLikes.addAll(sortedList);
+    notifyListeners();
+  }
+
+  // sort recipes by popularity or date
+  void sortRecipesByPopularityOrDate(bool popular) {
+    List<RecipeModel> sortedList = List.from(_recipes);
+    if (popular) {
+      sortedList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
+    } else {
+      sortedList.sort((a, b) => b.date.compareTo(a.date));
+    }
+    _filteredList.clear();
+    _filteredList.addAll(sortedList);
+    notifyListeners();
+  }
+
+  // sort recipes by category and on date or likes
+  void sortRecipesByCategoryAndDate(String category, bool popular) {
+    List<RecipeModel> filteredList = [];
     for (var recipe in _recipes) {
       if (recipe.category == category) {
-        categoryRecipes.add(recipe);
+        filteredList.add(recipe);
       }
     }
-    return categoryRecipes;
+    if (popular) {
+      filteredList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
+    } else {
+      filteredList.sort((a, b) => b.date.compareTo(a.date));
+    }
+    _filteredList.clear();
+    _filteredList.addAll(filteredList);
+    notifyListeners();
   }
 
   // add a recipe
@@ -120,30 +174,9 @@ class GetRecipes with ChangeNotifier {
     // get new recipe from firebase so that the local recipe also has the docId
     _recipes.add(recipe);
     updateRecipesByUser(recipe.createrUid);
+    top5RecipesByDate();
     notifyListeners();
   }
-
-  // update a recipe
-  // Future updateRecipe(RecipeModel recipe) async {
-  //   await FirebaseFirestore.instance
-  //       .collection('recipes')
-  //       .doc(recipe.docId)
-  //       .update({
-  //     'ImageLocation': recipe.imageLocation,
-  //     'RecipeName': recipe.recipeName,
-  //     'CreaterName': recipe.createrName,
-  //     'CreaterUid': recipe.createrUid,
-  //     'CreaterProfilePicture': recipe.createrProfilePicture,
-  //     'Minutes': recipe.minutes,
-  //     'Servings': recipe.servings,
-  //     'Category': recipe.category,
-  //     'Ingredients': recipe.ingredients,
-  //     'Description': recipe.description,
-  //     'Likes': recipe.likes,
-  //     'Date': recipe.date,
-  //   });
-  //   notifyListeners();
-  // }
 
   // update a recipe
   Future updateRecipeLikes(RecipeModel recipe) async {
@@ -168,6 +201,8 @@ class GetRecipes with ChangeNotifier {
     checkIfLiked(docId, uid);
     // recepten ophalen die je geliked hebt om je favorites te updaten
     updateRecipesByLiked(uid);
+    // home screen updaten
+    top5RecipesByLikes();
     // update recipe in firebase
     await updateRecipeLikes(recipe);
     notifyListeners();
@@ -284,23 +319,4 @@ class GetRecipes with ChangeNotifier {
         recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid);
     return !shoppingList['List'].contains(ingredient);
   }
-
-  // voor recipe list zodat het update in je profile, een string meegeven ipv recipes en dan ifs en dan reads doen
-
-  // get recipes by category
-
-  // get recipes by liked
-
-  // parameter toevoegen van recepten die je liked
-  // of ipv aantal likes bijhouden een list van user id's die het recept hebben geliked
-
-  // void addRecipe(String recipe) {
-  //   _recipes.add(recipe);
-  //   notifyListeners();
-  // }
-
-  // void removeRecipe(String recipe) {
-  //   _recipes.remove(recipe);
-  //   notifyListeners();
-  // }
 }

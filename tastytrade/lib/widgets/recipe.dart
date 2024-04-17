@@ -40,7 +40,8 @@ class Recipe extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => RecipeDetail(recipe: recipe, shoppingList: false)),
+                builder: (context) =>
+                    RecipeDetail(recipe: recipe, shoppingList: false)),
           );
         },
         child: Padding(
@@ -56,7 +57,17 @@ class Recipe extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Image.network(recipe.imageLocation, fit: BoxFit.cover),
+                child: Image.network(recipe.imageLocation, fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                          color: Color(0xFFFF8737)),
+                    );
+                  }
+                }),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/models/recipe_model.dart';
 import 'package:tastytrade/services/get_recipes.dart';
@@ -122,6 +123,7 @@ class RecipeDetail extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.access_time),
+                          const SizedBox(width: 4),
                           Text('${recipe.minutes.toString()} mins'),
                         ],
                       ),
@@ -129,6 +131,7 @@ class RecipeDetail extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.person),
+                          const SizedBox(width: 4),
                           Text('${recipe.servings.toString()} serves'),
                         ],
                       ),
@@ -136,6 +139,7 @@ class RecipeDetail extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.dining),
+                          const SizedBox(width: 4),
                           Text(recipe.category),
                         ],
                       ),
@@ -171,6 +175,22 @@ class RecipeDetail extends StatelessWidget {
                         ),
                       ],
                     )),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Column(
+                    children: [
+                      const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Data created',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold))),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              DateFormat('dd-MM-yyyy').format(recipe.date))),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: Column(
@@ -216,6 +236,7 @@ class RecipeDetail extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           const Icon(Icons.circle, size: 10),
+                                          const SizedBox(width: 8),
                                           Text(recipe.ingredients[index]),
                                         ],
                                       ),

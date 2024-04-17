@@ -38,11 +38,30 @@ class Profile extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 32,
-                          backgroundImage: user!.photoURL != null
-                              ? NetworkImage(user!.photoURL.toString())
-                              : null,
+                        Container(
+                          width: 64,
+                          height: 64,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[200],
+                          ),
+                          child: Image.network(
+                            fit: BoxFit.cover,
+                            user!.photoURL.toString(),
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child; // Return the actual image widget once loading is complete
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Color(0xFFFF8737),
+                                  ),
+                                ); // Return a progress indicator while loading
+                              }
+                            },
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Text(

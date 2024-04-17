@@ -36,7 +36,8 @@ class RecipePlanned extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => RecipeDetail(recipe: recipe, shoppingList: true),
+              builder: (context) =>
+                  RecipeDetail(recipe: recipe, shoppingList: true),
             ),
           );
         },
@@ -57,6 +58,15 @@ class RecipePlanned extends StatelessWidget {
                     child: Image.network(
                       recipe.imageLocation,
                       fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(
+                              color: Color(0xFFFF8737)),
+                        );
+                      },
                     ),
                   ),
                   Expanded(
