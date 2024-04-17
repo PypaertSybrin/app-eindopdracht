@@ -1,7 +1,9 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tastytrade/models/recipe_model.dart';
-import 'package:tastytrade/widgets/recipe.dart';
+import 'package:tastytrade/services/LocalNotificationService.dart';
 
 class GetRecipes with ChangeNotifier {
   // alle recipes
@@ -119,6 +121,17 @@ class GetRecipes with ChangeNotifier {
     notifyListeners();
   }
 
+  // get total likes of recipes by user
+  int getTotalLikes(String uid) {
+    int totalLikes = 0;
+    for (var recipe in _recipes) {
+      if (recipe.createrUid == uid) {
+        totalLikes += recipe.likes.length;
+      }
+    }
+    return totalLikes;
+  }
+
   // sort recipes by popularity or date
   void sortRecipesByPopularityOrDate(bool popular) {
     List<RecipeModel> sortedList = List.from(_recipes);
@@ -223,22 +236,30 @@ class GetRecipes with ChangeNotifier {
   // check if user already has a shoppinglist for that recipe, if not add one, if(true) only update the date
   Future createShoppingList(String docId, String uid, DateTime date) async {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
-    if (checkIfCertainShoppingListExist(docId, uid)) {
-      recipe.shoppingLists
-          .firstWhere((element) => element['UserUid'] == uid)['Date'] = date;
-    } else {
-      recipe.shoppingLists.add({
-        'UserUid': uid,
-        'Date': date,
-        'List': recipe.ingredients,
-      });
-    }
+    int notificationId = await LocalNotificationService().showTimedNotification(
+        'Ingredients required',
+        'The meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year} still requires some ingredients',
+        5);
+    recipe.shoppingLists.add({
+      'UserUid': uid,
+      'Date': date,
+      'List': recipe.ingredients,
+      'NotificationId': notificationId
+    });
     updateShoppingListsPerUser(uid);
     await FirebaseFirestore.instance
         .collection('recipes')
         .doc(docId)
         .update({'ShoppingLists': recipe.shoppingLists});
     notifyListeners();
+  }
+
+  // get date of a shopping list
+  DateTime getDateOfShoppingList(String docId, String uid) {
+    final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    final shoppingList =
+        recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid);
+    return shoppingList['Date'];
   }
 
   // Update the checkbox state in the shopping list

@@ -4,6 +4,7 @@ import 'package:tastytrade/routes/favorites.dart';
 import 'package:tastytrade/routes/home.dart';
 import 'package:tastytrade/routes/planned.dart';
 import 'package:tastytrade/routes/profile.dart';
+import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/utils/navigation.dart';
 
 // change notifier kan je gebruiken om de state van je app te beheren
@@ -74,7 +75,12 @@ class BottomNavigator extends StatelessWidget {
           ],
         ),
       ),
-      body: _widgetOptions.elementAt(context.watch<Navigation>().currentIndex),
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await context.read<GetRecipes>().getAllRecipes;
+          },
+          child: _widgetOptions
+              .elementAt(context.watch<Navigation>().currentIndex)),
     );
   }
 }

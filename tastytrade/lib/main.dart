@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/firebase_options.dart';
 import 'package:tastytrade/routes/auth/login.dart';
+import 'package:tastytrade/services/LocalNotificationService.dart';
 import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/utils/navigation.dart';
 
@@ -22,6 +23,7 @@ void main() async {
       child: const MainApp(),
     ),
   );
+  LocalNotificationService().init();
 }
 
 class MainApp extends StatelessWidget {

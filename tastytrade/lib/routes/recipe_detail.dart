@@ -23,7 +23,7 @@ class RecipeDetail extends StatelessWidget {
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      helpText: 'Select a date when you want to make this recipe',
+      helpText: 'Select a date',
       cancelText: 'Cancel',
       confirmText: 'Select',
     );
@@ -32,7 +32,6 @@ class RecipeDetail extends StatelessWidget {
       await context
           .read<GetRecipes>()
           .createShoppingList(recipe.docId, user!.uid, selectedDate);
-      date = null;
     }
   }
 
@@ -46,22 +45,24 @@ class RecipeDetail extends StatelessWidget {
         backgroundColor: const Color(0xFFFFD2B3),
       ),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => selectDate(context),
+          onPressed: () => context
+                  .read<GetRecipes>()
+                  .checkIfCertainShoppingListExist(recipe.docId, user!.uid)
+              ? null
+              : selectDate(context),
           backgroundColor: const Color(0xFFFF8737),
           foregroundColor: Colors.black,
-          label: Row(children: [
-            Text(context
-                    .read<GetRecipes>()
-                    .checkIfCertainShoppingListExist(recipe.docId, user!.uid)
-                ? 'Change date'
-                : 'Select a date'),
-            const SizedBox(width: 8),
-            Icon(context
-                    .read<GetRecipes>()
-                    .checkIfCertainShoppingListExist(recipe.docId, user!.uid)
-                ? Icons.edit
-                : Icons.calendar_today)
-          ])),
+          label: context
+                  .read<GetRecipes>()
+                  .checkIfCertainShoppingListExist(recipe.docId, user!.uid)
+              ? Text(DateFormat('dd-MM-yyyy').format(context
+                  .watch<GetRecipes>()
+                  .getDateOfShoppingList(recipe.docId, user!.uid)))
+              : const Row(children: [
+                  Text('Select a date'),
+                  SizedBox(width: 8),
+                  Icon(Icons.calendar_today)
+                ])),
       body: SingleChildScrollView(
         child: Column(children: [
           SizedBox(

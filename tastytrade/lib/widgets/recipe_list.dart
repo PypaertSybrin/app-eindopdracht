@@ -8,39 +8,30 @@ class RecipeList extends StatelessWidget {
   List<RecipeModel> recipes;
   RecipeList({super.key, required this.recipes});
 
-  Future<void> getUpdatedRecipes(BuildContext context) async {
-    await context.read<GetRecipes>().getAllRecipes();
-  }
-
   @override
   Widget build(BuildContext context) {
     // print("recipes length in favorites and profile: ${recipes.length}");
-    return RefreshIndicator(
-      onRefresh: () async {
-        await getUpdatedRecipes(context);
-      },
-      child: recipes.isNotEmpty
-          ? GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: recipes.length,
-              addAutomaticKeepAlives: false,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final recipe = recipes[index];
-                return Recipe(
-                  large: false,
-                  recipe: recipe,
-                );
-              },
-            )
-          : const Center(
-              child: Text('No recipes found'),
+    return recipes.isNotEmpty
+        ? GridView.builder(
+            padding: const EdgeInsets.all(16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
             ),
-    );
+            itemCount: recipes.length,
+            addAutomaticKeepAlives: false,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final recipe = recipes[index];
+              return Recipe(
+                large: false,
+                recipe: recipe,
+              );
+            },
+          )
+        : const Center(
+            child: Text('No recipes found'),
+          );
   }
 }

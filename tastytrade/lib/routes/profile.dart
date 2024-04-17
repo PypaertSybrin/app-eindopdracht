@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/recipe_create.dart';
 import 'package:tastytrade/services/get_recipes.dart';
@@ -78,8 +77,14 @@ class Profile extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('4',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                                context
+                                    .watch<GetRecipes>()
+                                    .userRecipes
+                                    .length
+                                    .toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
                             Text('Recipes',
                                 style: TextStyle(color: Colors.grey[700])),
                           ],
@@ -88,8 +93,12 @@ class Profile extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('5.1k',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                                context
+                                    .watch<GetRecipes>()
+                                    .getTotalLikes(user!.uid)
+                                    .toString(),
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                             Text('Total likes',
                                 style: TextStyle(color: Colors.grey[700])),
                           ],
@@ -126,8 +135,10 @@ class Profile extends StatelessWidget {
           ),
         ),
         Expanded(
-            child:
-                RecipeList(recipes: context.watch<GetRecipes>().userRecipes)),
+            child: RecipeList(
+                recipes: context
+                    .watch<GetRecipes>()
+                    .userRecipes)),
       ],
     );
   }
