@@ -1,6 +1,8 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -48,10 +50,7 @@ class LocalNotificationService {
 
   Future<int> showTimedNotification(
       String title, String description, int value) async {
-    // notification_id = get the id of the largest notification_id and add 1
-    int notification_id = await flutterLocalNotificationsPlugin
-        .pendingNotificationRequests()
-        .then((value) => value.length + 1);
+    int notification_id = generateUniqueId();
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
         notification_id,
@@ -68,22 +67,22 @@ class LocalNotificationService {
     return notification_id;
   }
 
-  // update time of a notification
-  // void updateTimedNotification(int notificationId, String title, String description, int value) async {
-  //   await flutterLocalNotificationsPlugin.zonedSchedule(
-  //       notificationId,
-  //       title,
-  //       description,
-  //       tz.TZDateTime.now(tz.local).add(Duration(seconds: value)),
-  //       const NotificationDetails(
-  //           android: AndroidNotificationDetails(
-  //               'your channel id', 'your channel name',
-  //               channelDescription: 'your channel description')),
-  //       androidAllowWhileIdle: true,
-  //       uiLocalNotificationDateInterpretation:
-  //           UILocalNotificationDateInterpretation.absoluteTime);
-  // }
-  void deleteNotification(int notificationId) async {
+  Future deleteNotification(int notificationId) async {
     await flutterLocalNotificationsPlugin.cancel(notificationId);
+  }
+
+  int generateUniqueId() {
+    // Get the current timestamp
+    int random1 = Random().nextInt(999);
+    int random2 = Random().nextInt(999);
+    int random3 = Random().nextInt(999);
+
+    // Concatenate and return a unique integer
+    return int.parse('$random1$random2$random3');
+  }
+
+  void main() {
+    int uniqueId = generateUniqueId();
+    print(uniqueId);
   }
 }

@@ -12,6 +12,10 @@ class Favorites extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RecipeList(recipes: context.watch<GetRecipes>().likedRecipes);
+    return RefreshIndicator(
+        onRefresh: () async {
+          await context.read<GetRecipes>().getAllRecipes();
+        },
+        child: RecipeList(recipes: context.watch<GetRecipes>().likedRecipes));
   }
 }

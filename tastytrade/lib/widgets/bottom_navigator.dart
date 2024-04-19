@@ -75,12 +75,8 @@ class BottomNavigator extends StatelessWidget {
           ],
         ),
       ),
-      body: RefreshIndicator(
-          onRefresh: () async {
-            await context.read<GetRecipes>().getAllRecipes;
-          },
-          child: _widgetOptions
-              .elementAt(context.watch<Navigation>().currentIndex)),
+      body: _widgetOptions
+          .elementAt(context.watch<Navigation>().currentIndex),
     );
   }
 }

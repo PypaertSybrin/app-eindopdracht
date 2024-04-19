@@ -13,7 +13,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String email = 'sybrin.pypaert@student.howest.be';
+  String email = 'sybrinpypaert@gmail.com';
   String password = 'Sybrin1234';
   bool isLoading = false;
 

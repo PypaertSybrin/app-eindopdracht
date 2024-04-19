@@ -8,25 +8,30 @@ class Planned extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recipes = context.watch<GetRecipes>().shoppingLists;
-    return recipes.isNotEmpty
-        ? Padding(
-            padding: const EdgeInsets.all(16),
-            child: ListView.separated(
-              itemCount: recipes.length,
-              clipBehavior: Clip.none,
-              addAutomaticKeepAlives: false,
-              itemBuilder: (context, index) {
-                return RecipePlanned(
-                  recipe: recipes[index],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(height: 16);
-              },
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<GetRecipes>().getAllRecipes();
+      },
+      child: recipes.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView.separated(
+                itemCount: recipes.length,
+                clipBehavior: Clip.none,
+                addAutomaticKeepAlives: false,
+                itemBuilder: (context, index) {
+                  return RecipePlanned(
+                    recipe: recipes[index],
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 16);
+                },
+              ),
+            )
+          : const Center(
+              child: Text('No recipes found'),
             ),
-          )
-        : const Center(
-            child: Text('No recipes found'),
-          );
+    );
   }
 }

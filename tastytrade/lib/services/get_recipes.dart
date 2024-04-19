@@ -323,6 +323,8 @@ class GetRecipes with ChangeNotifier {
   // delete meal plan
   Future deleteMealPlan(String docId, String uid) async {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
+    await LocalNotificationService().deleteNotification(
+        recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid)['NotificationId']);
     recipe.shoppingLists.removeWhere((element) => element['UserUid'] == uid);
     updateShoppingListsPerUser(uid);
     await FirebaseFirestore.instance
