@@ -102,7 +102,7 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.only(left: 16),
                     child: TextField(
                       decoration: InputDecoration(
-                        errorText: error ? 'Invalid email or password' : null,
+                        errorText: error ? 'Incorrect email or password' : null,
                         errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Email',
                         border: InputBorder.none,
@@ -125,7 +125,7 @@ class _LoginState extends State<Login> {
                     child: TextField(
                       obscureText: true,
                       decoration: InputDecoration(
-                        errorText: error ? 'Invalid email or password' : null,
+                        errorText: error ? 'Incorrect email or password' : null,
                         errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Password',
                         border: InputBorder.none,
