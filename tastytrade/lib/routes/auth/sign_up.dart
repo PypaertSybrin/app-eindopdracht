@@ -40,13 +40,14 @@ class _SignUpState extends State<SignUp> {
         final credential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         if (credential.user != null) {
+          await credential.user!.updateDisplayName(name);
           if (image != null) {
             final profileRef = storageRef.child(image!.path);
-            credential.user!.updatePhotoURL(await profileRef
+            await credential.user!.updatePhotoURL(await profileRef
                 .putFile(image!)
                 .then((value) => value.ref.getDownloadURL()));
           }
-          credential.user!.updateDisplayName(name);
+          await credential.user!.reload();
           await context.read<GetRecipes>().getAllRecipes();
           context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
           context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
