@@ -182,7 +182,7 @@ class RecipeDetail extends StatelessWidget {
                     children: [
                       const Align(
                           alignment: Alignment.centerLeft,
-                          child: Text('Data created',
+                          child: Text('Date created',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold))),
                       Align(

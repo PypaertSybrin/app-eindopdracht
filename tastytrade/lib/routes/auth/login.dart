@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/auth/sign_up.dart';
 import 'package:tastytrade/services/get_recipes.dart';
+import 'package:tastytrade/services/permission_handler.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class Login extends StatefulWidget {
@@ -32,12 +35,16 @@ class _LoginState extends State<Login> {
           await context.read<GetRecipes>().getAllRecipes();
           context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
           context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
-          context.read<GetRecipes>().updateShoppingListsPerUser(credential.user!.uid);
+          context
+              .read<GetRecipes>()
+              .updateShoppingListsPerUser(credential.user!.uid);
+          await PermissionHandler().requestNotificationPermission();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => BottomNavigator()),
           );
-                  setState(() {
+
+          setState(() {
             isLoading = false;
           });
         }
@@ -147,7 +154,8 @@ class _LoginState extends State<Login> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const SignUp()),
+                          MaterialPageRoute(
+                              builder: (context) => const SignUp()),
                         );
                       },
                       child: const Text('Sign up',
@@ -162,5 +170,70 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget cancelButton = TextButton(
+    child: const Text('Cancel'),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+  Widget continueButton = TextButton(
+    child: const Text('Continue'),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: const Text('AlertDialog'),
+    content: const Text(
+        'Would you like to continue learning how to use Flutter alerts?'),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+class ShowAlertDialog extends StatelessWidget {
+  ShowAlertDialog({super.key});
+
+  Future<void> _showAlertDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Camera Permission Denied'),
+          content: const Text('You have denied the camera permission. '
+              'Please go to app settings and enable the camera permission.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return showAlertDialog(context);
   }
 }

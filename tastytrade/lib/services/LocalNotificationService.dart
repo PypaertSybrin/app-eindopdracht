@@ -1,8 +1,6 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -31,22 +29,22 @@ class LocalNotificationService {
     tz.initializeTimeZones();
   }
 
-  void showNotificationAndroid(String title, String value) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('channel_id', 'Channel Name',
-            channelDescription: 'Channel Description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
+  // void showNotificationAndroid(String title, String value) async {
+  //   const AndroidNotificationDetails androidNotificationDetails =
+  //       AndroidNotificationDetails('channel_id', 'Channel Name',
+  //           channelDescription: 'Channel Description',
+  //           importance: Importance.max,
+  //           priority: Priority.high,
+  //           ticker: 'ticker');
 
-    int notification_id = 1;
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+  //   int notification_id = 1;
+  //   const NotificationDetails notificationDetails =
+  //       NotificationDetails(android: androidNotificationDetails);
 
-    await flutterLocalNotificationsPlugin.show(
-        notification_id, title, value, notificationDetails,
-        payload: 'Not present');
-  }
+  //   await flutterLocalNotificationsPlugin.show(
+  //       notification_id, title, value, notificationDetails,
+  //       payload: 'Not present');
+  // }
 
   Future<int> showTimedNotification(
       String title, String description, int value) async {
@@ -79,10 +77,5 @@ class LocalNotificationService {
 
     // Concatenate and return a unique integer
     return int.parse('$random1$random2$random3');
-  }
-
-  void main() {
-    int uniqueId = generateUniqueId();
-    print(uniqueId);
   }
 }

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tastytrade/models/recipe_model.dart';
 import 'package:tastytrade/services/LocalNotificationService.dart';
+import 'package:tastytrade/services/permission_handler.dart';
 
 class GetRecipes with ChangeNotifier {
   // alle recipes
@@ -238,7 +239,7 @@ class GetRecipes with ChangeNotifier {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
     int notificationId = await LocalNotificationService().showTimedNotification(
         'Ingredients required',
-        'The meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year} still requires some ingredients',
+        'Check if you have all the ingredients for the meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year}',
         5);
     recipe.shoppingLists.add({
       'UserUid': uid,
@@ -259,7 +260,11 @@ class GetRecipes with ChangeNotifier {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
     final shoppingList =
         recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid);
-    return shoppingList['Date'];
+    try{
+      return shoppingList['Date'];
+    } catch(e){
+      return convertToDate(shoppingList['Date']);
+    }
   }
 
   // Update the checkbox state in the shopping list
