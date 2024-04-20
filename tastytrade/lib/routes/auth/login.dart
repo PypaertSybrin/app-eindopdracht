@@ -16,8 +16,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String email = '';
-  String password = '';
+  String email = 'sybrin.pypaert@student.howest.be';
+  String password = 'Sybrin1234';
   bool isLoading = false;
   bool error = false;
 
@@ -108,6 +108,7 @@ class _LoginState extends State<Login> {
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
                       ),
+                      keyboardType: TextInputType.emailAddress,
                       cursorColor: Colors.black,
                       onChanged: (value) => email = value,
                     ),

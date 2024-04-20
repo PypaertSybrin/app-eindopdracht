@@ -55,36 +55,47 @@ class _Recipe extends State<RecipeCreate> {
     setState(() {
       isLoading = true;
     });
-    String location = await getPictureReference();
-    createrName = FirebaseAuth.instance.currentUser!.displayName!;
-    createrUid = FirebaseAuth.instance.currentUser!.uid;
-    if (FirebaseAuth.instance.currentUser!.photoURL != null) {
-      createrProfilePicture =
-          FirebaseAuth.instance.currentUser!.photoURL!;
+    if (image != null &&
+        recipeName.isNotEmpty &&
+        minutes != 0 &&
+        servings != 0 &&
+        category.isNotEmpty &&
+        ingredients.isNotEmpty &&
+        description.isNotEmpty) {
+      String location = await getPictureReference();
+      createrName = FirebaseAuth.instance.currentUser!.displayName!;
+      createrUid = FirebaseAuth.instance.currentUser!.uid;
+      if (FirebaseAuth.instance.currentUser!.photoURL != null) {
+        createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
+      }
+      final recipe = RecipeModel(
+          docId: docId,
+          imageLocation: location,
+          recipeName: recipeName,
+          createrName: createrName,
+          createrUid: createrUid,
+          createrProfilePicture: createrProfilePicture,
+          minutes: minutes,
+          servings: servings,
+          category: category,
+          ingredients: ingredients,
+          description: description,
+          likes: likes,
+          shoppingLists: shoppingLists,
+          date: DateTime.now());
+
+      await context.read<GetRecipes>().addRecipe(recipe);
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields and add an image.'),
+        ),
+      );
     }
-
-    final recipe = RecipeModel(
-        docId: docId,
-        imageLocation: location,
-        recipeName: recipeName,
-        createrName: createrName,
-        createrUid: createrUid,
-        createrProfilePicture: createrProfilePicture,
-        minutes: minutes,
-        servings: servings,
-        category: category,
-        ingredients: ingredients,
-        description: description,
-        likes: likes,
-        shoppingLists: shoppingLists,
-        date: DateTime.now());
-
-    await context.read<GetRecipes>().addRecipe(recipe);
-
     setState(() {
       isLoading = false;
     });
-    // Navigator.pop(context);
   }
 
   void addIngredient() {
@@ -187,9 +198,18 @@ class _Recipe extends State<RecipeCreate> {
               child: Column(
                 children: [
                   TextField(
+                    cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       labelText: 'Recipe Name',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                      floatingLabelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Set border color here
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
                     ),
                     onChanged: (value) => recipeName = value,
                   ),
@@ -200,9 +220,22 @@ class _Recipe extends State<RecipeCreate> {
                       children: [
                         Expanded(
                           child: TextField(
+                            cursorColor: Colors.black,
                             decoration: const InputDecoration(
                               labelText: 'Time (min.)',
-                              border: OutlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                              ),
+                              floatingLabelStyle:
+                                  TextStyle(color: Colors.black),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        Colors.black), // Set border color here
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                              ),
                             ),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -214,9 +247,22 @@ class _Recipe extends State<RecipeCreate> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
+                            cursorColor: Colors.black,
                             decoration: const InputDecoration(
                               labelText: 'Serves',
-                              border: OutlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                              ),
+                              floatingLabelStyle:
+                                  TextStyle(color: Colors.black),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        Colors.black), // Set border color here
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0)),
+                              ),
                             ),
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -227,6 +273,16 @@ class _Recipe extends State<RecipeCreate> {
                         ),
                         const SizedBox(width: 8),
                         DropdownMenu<String>(
+                          menuStyle: MenuStyle(
+                            backgroundColor: MaterialStateProperty.all<Color?>(
+                                Colors.grey[50]),
+                          ),
+                          inputDecorationTheme: const InputDecorationTheme(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
+                            ),
+                          ),
                           hintText: 'Category',
                           dropdownMenuEntries: categories
                               .map<DropdownMenuEntry<String>>((String value) {
@@ -247,9 +303,20 @@ class _Recipe extends State<RecipeCreate> {
                     children: [
                       Expanded(
                         child: TextField(
+                          cursorColor: Colors.black,
                           decoration: const InputDecoration(
                             labelText: 'Ingredient',
-                            border: OutlineInputBorder(),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
+                            ),
+                            floatingLabelStyle: TextStyle(color: Colors.black),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.black), // Set border color here
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
+                            ),
                           ),
                           onChanged: (value) {
                             setState(() {
@@ -266,6 +333,7 @@ class _Recipe extends State<RecipeCreate> {
                   ),
                   const SizedBox(height: 8),
                   Container(
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
                       color: const Color(0xFFFFD2B3),
@@ -276,42 +344,54 @@ class _Recipe extends State<RecipeCreate> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Your Ingredients:',
+                            const Text('Your ingredients:',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 8),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: ingredients.length,
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Ingredient ${index + 1}: ${ingredients[index]}',
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () => deleteIngredient(
-                                          index), // Pass index to delete function
-                                      icon: const Icon(Icons.delete),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                            ingredients.isEmpty
+                                ? const Text(
+                                    'Enter an ingredient and press \'+\'')
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: ingredients.length,
+                                    itemBuilder: (context, index) {
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'Ingredient ${index + 1}: ${ingredients[index]}',
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => deleteIngredient(
+                                                index), // Pass index to delete function
+                                            icon: const Icon(Icons.delete),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
                           ]),
                     ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
+                    cursorColor: Colors.black,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: const InputDecoration(
                       labelText: 'Instructions',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                      floatingLabelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Set border color here
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
                     ),
                     onChanged: (value) => description = value,
                   ),

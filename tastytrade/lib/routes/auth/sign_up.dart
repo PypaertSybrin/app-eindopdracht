@@ -201,6 +201,7 @@ class _SignUpState extends State<SignUp> {
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
                       ),
+                      keyboardType: TextInputType.emailAddress,
                       cursorColor: Colors.black,
                       onChanged: (value) => email = value,
                     ),
