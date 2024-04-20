@@ -71,7 +71,15 @@ class RecipeDetail extends StatelessWidget {
             child: Image.network(
               recipe.imageLocation,
               fit: BoxFit.cover,
-              width: MediaQuery.of(context).size.width,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFFFF8737)),
+                  );
+                }
+              },
             ),
           ),
           Padding(
@@ -159,12 +167,37 @@ class RecipeDetail extends StatelessWidget {
                                     fontWeight: FontWeight.bold))),
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 32,
-                              backgroundImage:
-                                  Image.network(recipe.createrProfilePicture)
-                                      .image,
-                            ),
+                            Container(
+                                width: 64,
+                                height: 64,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey[200],
+                                ),
+                                child: recipe.createrProfilePicture != ''
+                                    ? Image.network(
+                                        fit: BoxFit.cover,
+                                        recipe.createrProfilePicture,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child; // Return the actual image widget once loading is complete
+                                          } else {
+                                            return const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Color(0xFFFF8737),
+                                              ),
+                                            ); // Return a progress indicator while loading
+                                          }
+                                        },
+                                      )
+                                    : const Icon(
+                                        Icons.person,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      )),
                             const SizedBox(width: 10),
                             Text(
                               recipe.createrName,

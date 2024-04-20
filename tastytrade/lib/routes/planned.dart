@@ -9,6 +9,7 @@ class Planned extends StatelessWidget {
   Widget build(BuildContext context) {
     final recipes = context.watch<GetRecipes>().shoppingLists;
     return RefreshIndicator(
+      color: const Color(0xFFFF8737),
       onRefresh: () async {
         await context.read<GetRecipes>().getAllRecipes();
       },

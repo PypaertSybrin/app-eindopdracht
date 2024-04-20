@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:tastytrade/models/recipe_model.dart';
 import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/recipe_list.dart';
 
@@ -27,76 +24,83 @@ class _FilterState extends State<Filter> {
         backgroundColor: const Color(0xFFFFD2B3),
       ),
       backgroundColor: const Color(0xFFFFD2B3),
-      body: Column(
-        children: [
-          widget.isCategory
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            isPopular = false;
-                          });
-                          context
-                              .read<GetRecipes>()
-                              .sortRecipesByCategoryAndDate(
-                                  widget.filter, false);
-                        },
-                        child: Container(
+      body: RefreshIndicator(
+        color: const Color(0xFFFF8737),
+        onRefresh: () async {
+          await context.read<GetRecipes>().getAllRecipes();
+        },
+        child: Column(
+          children: [
+            widget.isCategory
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            setState(() {
+                              isPopular = false;
+                            });
+                            context
+                                .read<GetRecipes>()
+                                .sortRecipesByCategoryAndDate(
+                                    widget.filter, false);
+                          },
+                          child: Container(
+                              width: 96,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                color:
+                                    isPopular ? null : const Color(0xFFFF8737),
+                                border: Border.all(
+                                    color: const Color(0xFFFF8737), width: 2.0),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'New',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ))),
+                      TextButton(
+                          onPressed: () {
+                            setState(() {
+                              isPopular = true;
+                            });
+                            context
+                                .read<GetRecipes>()
+                                .sortRecipesByCategoryAndDate(
+                                    widget.filter, true);
+                          },
+                          child: Container(
                             width: 96,
                             height: 40,
                             decoration: BoxDecoration(
+                              color: isPopular ? const Color(0xFFFF8737) : null,
                               borderRadius: BorderRadius.circular(12.0),
-                              color: isPopular ? null : const Color(0xFFFF8737),
                               border: Border.all(
                                   color: const Color(0xFFFF8737), width: 2.0),
                             ),
                             child: const Center(
                               child: Text(
-                                'New',
+                                'Popular',
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
-                            ))),
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            isPopular = true;
-                          });
-                          context
-                              .read<GetRecipes>()
-                              .sortRecipesByCategoryAndDate(
-                                  widget.filter, true);
-                        },
-                        child: Container(
-                          width: 96,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: isPopular ? const Color(0xFFFF8737) : null,
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                                color: const Color(0xFFFF8737), width: 2.0),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'Popular',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
                             ),
-                          ),
-                        )),
-                  ],
-                )
-              : Container(),
-          Expanded(
-              child:
-                  RecipeList(recipes: context.watch<GetRecipes>().filteredList))
-        ],
+                          )),
+                    ],
+                  )
+                : Container(),
+            Expanded(
+                child: RecipeList(
+                    recipes: context.watch<GetRecipes>().filteredList))
+          ],
+        ),
       ),
     );
   }

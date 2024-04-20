@@ -16,9 +16,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String email = 'sybrinpypaert@gmail.com';
-  String password = 'Sybrin1234';
+  String email = '';
+  String password = '';
   bool isLoading = false;
+  bool error = false;
 
   Future<void> login() async {
     setState(() {
@@ -43,21 +44,30 @@ class _LoginState extends State<Login> {
             context,
             MaterialPageRoute(builder: (context) => BottomNavigator()),
           );
-
+        } else {
           setState(() {
-            isLoading = false;
+            error = true;
           });
         }
       } on FirebaseAuthException catch (e) {
+        setState(() {
+          error = true;
+        });
         if (e.code == 'user-not-found') {
           // print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
           // print('Wrong password provided for that user.');
         }
+      } finally {
         setState(() {
           isLoading = false;
         });
       }
+    } else {
+      setState(() {
+        error = true;
+        isLoading = false;
+      });
     }
   }
 
@@ -72,14 +82,16 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Container(
-                //   child: Lottie.asset('assets/food.json', repeat: false),
-                // ),
+                const Icon(Icons.food_bank,
+                    size: 100, color: Color(0xFFFF8737)),
                 const Text('TastyTrade',
                     style:
                         TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-                const Text('Welcome back, you\'ve been missed!',
-                    style: TextStyle(fontSize: 20)),
+                const Text(
+                  'Welcome back, you\'ve been missed!',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 40),
                 Container(
                   decoration: BoxDecoration(
@@ -90,6 +102,8 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.only(left: 16),
                     child: TextField(
                       decoration: InputDecoration(
+                        errorText: error ? 'Invalid email or password' : null,
+                        errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Email',
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
@@ -110,6 +124,8 @@ class _LoginState extends State<Login> {
                     child: TextField(
                       obscureText: true,
                       decoration: InputDecoration(
+                        errorText: error ? 'Invalid email or password' : null,
+                        errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Password',
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
@@ -135,12 +151,12 @@ class _LoginState extends State<Login> {
                               height: 30,
                               width: 30,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 3, color: Colors.white),
+                                  strokeWidth: 3, color: Colors.black),
                             )
                           : const Text('Sign in',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -170,70 +186,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-}
-
-showAlertDialog(BuildContext context) {
-  // set up the buttons
-  Widget cancelButton = TextButton(
-    child: const Text('Cancel'),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-  Widget continueButton = TextButton(
-    child: const Text('Continue'),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: const Text('AlertDialog'),
-    content: const Text(
-        'Would you like to continue learning how to use Flutter alerts?'),
-    actions: [
-      cancelButton,
-      continueButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-class ShowAlertDialog extends StatelessWidget {
-  ShowAlertDialog({super.key});
-
-  Future<void> _showAlertDialog(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Camera Permission Denied'),
-          content: const Text('You have denied the camera permission. '
-              'Please go to app settings and enable the camera permission.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                openAppSettings();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return showAlertDialog(context);
   }
 }

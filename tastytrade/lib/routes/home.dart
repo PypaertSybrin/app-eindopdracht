@@ -13,6 +13,7 @@ class Home extends StatelessWidget {
     final popularRecipes = context.watch<GetRecipes>().top5ByLikes;
     final newRecipes = context.watch<GetRecipes>().top5ByDate;
     return RefreshIndicator(
+      color: const Color(0xFFFF8737),
       onRefresh: () async {
         await context.read<GetRecipes>().getAllRecipes();
       },

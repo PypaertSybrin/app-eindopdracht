@@ -56,9 +56,12 @@ class _Recipe extends State<RecipeCreate> {
       isLoading = true;
     });
     String location = await getPictureReference();
-    String createrName = FirebaseAuth.instance.currentUser!.displayName!;
-    String createrUid = FirebaseAuth.instance.currentUser!.uid;
-    String createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
+    createrName = FirebaseAuth.instance.currentUser!.displayName!;
+    createrUid = FirebaseAuth.instance.currentUser!.uid;
+    if (FirebaseAuth.instance.currentUser!.photoURL != null) {
+      createrProfilePicture =
+          FirebaseAuth.instance.currentUser!.photoURL!;
+    }
 
     final recipe = RecipeModel(
         docId: docId,

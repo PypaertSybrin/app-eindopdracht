@@ -13,6 +13,7 @@ class Favorites extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+        color: const Color(0xFFFF8737),
         onRefresh: () async {
           await context.read<GetRecipes>().getAllRecipes();
         },

@@ -239,7 +239,7 @@ class GetRecipes with ChangeNotifier {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
     int notificationId = await LocalNotificationService().showTimedNotification(
         'Ingredients required',
-        'Check if you have all the ingredients for the meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year}',
+        'Make sure you have all the ingredients for meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year}',
         5);
     recipe.shoppingLists.add({
       'UserUid': uid,

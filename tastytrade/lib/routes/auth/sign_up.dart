@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/services/get_recipes.dart';
+import 'package:tastytrade/services/permission_handler.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class SignUp extends StatefulWidget {
@@ -21,6 +22,9 @@ class _SignUpState extends State<SignUp> {
   String email = '';
   String password = '';
   bool isLoading = false;
+  bool nameError = false;
+  bool emailError = false;
+  bool passwordError = false;
 
   final storageRef = FirebaseStorage.instance.ref();
 
@@ -28,7 +32,7 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       isLoading = true;
     });
-    if (email.isNotEmpty && password.isNotEmpty) {
+    if (email.isNotEmpty && password.isNotEmpty && name.isNotEmpty) {
       // print(email);
       // print(password);
 
@@ -36,14 +40,20 @@ class _SignUpState extends State<SignUp> {
         final credential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         if (credential.user != null) {
-          final profileRef = storageRef.child(image!.path);
+          if (image != null) {
+            final profileRef = storageRef.child(image!.path);
+            credential.user!.updatePhotoURL(await profileRef
+                .putFile(image!)
+                .then((value) => value.ref.getDownloadURL()));
+          }
           credential.user!.updateDisplayName(name);
-          credential.user!.updatePhotoURL(await profileRef.putFile(image!).then(
-              (value) => value.ref.getDownloadURL()));
           await context.read<GetRecipes>().getAllRecipes();
           context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
           context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
-          context.read<GetRecipes>().updateShoppingListsPerUser(credential.user!.uid);
+          context
+              .read<GetRecipes>()
+              .updateShoppingListsPerUser(credential.user!.uid);
+          await PermissionHandler().requestNotificationPermission();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => BottomNavigator()),
@@ -62,7 +72,18 @@ class _SignUpState extends State<SignUp> {
         setState(() {
           isLoading = false;
         });
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
+    } else {
+      setState(() {
+        nameError = name.isEmpty;
+        emailError = email.isEmpty;
+        passwordError = password.isEmpty;
+        isLoading = false;
+      });
     }
   }
 
@@ -122,8 +143,11 @@ class _SignUpState extends State<SignUp> {
                 const Text('TastyTrade',
                     style:
                         TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-                const Text('Register below with your details!',
-                    style: TextStyle(fontSize: 20)),
+                const Text(
+                  'Register below with your details!',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 16),
                 MaterialButton(
                   onPressed: () {
@@ -132,9 +156,12 @@ class _SignUpState extends State<SignUp> {
                   child: CircleAvatar(
                       radius: 50,
                       backgroundImage: image != null ? FileImage(image!) : null,
-                      backgroundColor: Colors.grey[300],
+                      backgroundColor: Colors.grey[200],
                       child: image == null
-                          ? const Icon(Icons.add_a_photo, color: Colors.white)
+                          ? const Icon(
+                              Icons.add_a_photo,
+                              color: Colors.black,
+                            )
                           : null),
                 ),
                 const SizedBox(height: 16),
@@ -147,6 +174,8 @@ class _SignUpState extends State<SignUp> {
                     padding: const EdgeInsets.only(left: 16),
                     child: TextField(
                       decoration: InputDecoration(
+                        errorText: nameError ? 'Name cannot be empty' : null,
+                        errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Username',
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
@@ -166,6 +195,8 @@ class _SignUpState extends State<SignUp> {
                     padding: const EdgeInsets.only(left: 16),
                     child: TextField(
                       decoration: InputDecoration(
+                        errorText: emailError ? 'Email cannot be empty' : null,
+                        errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Email',
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
@@ -186,6 +217,9 @@ class _SignUpState extends State<SignUp> {
                     child: TextField(
                       obscureText: true,
                       decoration: InputDecoration(
+                        errorText:
+                            passwordError ? 'Password cannot be empty' : null,
+                        errorStyle: const TextStyle(color: Colors.red),
                         labelText: 'Password',
                         border: InputBorder.none,
                         labelStyle: TextStyle(color: Colors.grey[400]),
@@ -211,12 +245,12 @@ class _SignUpState extends State<SignUp> {
                               height: 30,
                               width: 30,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 3, color: Colors.white),
+                                  strokeWidth: 3, color: Colors.black),
                             )
                           : const Text('Sign up',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold)),
                     ),
                   ),

@@ -14,6 +14,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: const Color(0xFFFF8737),
       onRefresh: () async {
         await context.read<GetRecipes>().getAllRecipes();
       },
@@ -50,7 +51,7 @@ class Profile extends StatelessWidget {
                               shape: BoxShape.circle,
                               color: Colors.grey[200],
                             ),
-                            child: Image.network(
+                            child: user!.photoURL != null ? Image.network(
                               fit: BoxFit.cover,
                               user!.photoURL.toString(),
                               loadingBuilder: (BuildContext context,
@@ -66,7 +67,11 @@ class Profile extends StatelessWidget {
                                   ); // Return a progress indicator while loading
                                 }
                               },
-                            ),
+                            ): const Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.grey,
+                            )
                           ),
                           const SizedBox(width: 10),
                           Text(
