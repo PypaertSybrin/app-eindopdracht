@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/firebase_options.dart';
 import 'package:tastytrade/routes/auth/login.dart';
-import 'package:tastytrade/services/local_notification_service.dart';
+import 'package:tastytrade/utils/local_notification_service.dart';
 import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/utils/navigation.dart';
 

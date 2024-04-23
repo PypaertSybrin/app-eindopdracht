@@ -5,7 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/auth/sign_up.dart';
 import 'package:tastytrade/services/get_recipes.dart';
-import 'package:tastytrade/services/permission_handler.dart';
+import 'package:tastytrade/utils/permission_handler.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class Login extends StatefulWidget {

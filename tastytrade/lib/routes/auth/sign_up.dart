@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/services/get_recipes.dart';
-import 'package:tastytrade/services/permission_handler.dart';
+import 'package:tastytrade/utils/permission_handler.dart';
 import 'package:tastytrade/widgets/bottom_navigator.dart';
 
 class SignUp extends StatefulWidget {
