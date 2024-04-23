@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tastytrade/models/recipe_model.dart';
-import 'package:tastytrade/services/LocalNotificationService.dart';
+import 'package:tastytrade/services/local_notification_service.dart';
 import 'package:tastytrade/services/permission_handler.dart';
 
 class GetRecipes with ChangeNotifier {
