@@ -19,6 +19,23 @@ class RecipeDetail extends StatelessWidget {
 
   Future<void> selectDate(BuildContext context) async {
     DateTime? date = await showDatePicker(
+      // change background color
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFFFF8737),
+              onPrimary: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFFFF8737),
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),

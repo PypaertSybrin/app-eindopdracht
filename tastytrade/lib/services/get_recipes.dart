@@ -95,7 +95,23 @@ class GetRecipes with ChangeNotifier {
     for (var recipe in _recipes) {
       for (var list in recipe.shoppingLists) {
         if (list['UserUid'] == uid) {
-          shoppingList.add(recipe);
+          try {
+            DateTime date = list['Date'];
+            // check if the date is in the past, if so delete the meal plan
+            if (DateTime.now().day <= date.day) {
+              shoppingList.add(recipe);
+            } else {
+              deleteMealPlan(recipe.docId, uid);
+            }
+          } catch (e) {
+            DateTime date = convertToDate(list['Date']);
+            // check if the date is in the past, if so delete the meal plan
+            if (DateTime.now().day <= date.day) {
+              shoppingList.add(recipe);
+            } else {
+              deleteMealPlan(recipe.docId, uid);
+            }
+          }
         }
       }
     }
@@ -130,6 +146,7 @@ class GetRecipes with ChangeNotifier {
         totalLikes += recipe.likes.length;
       }
     }
+    print('fetching likes');
     return totalLikes;
   }
 
@@ -260,9 +277,9 @@ class GetRecipes with ChangeNotifier {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
     final shoppingList =
         recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid);
-    try{
+    try {
       return shoppingList['Date'];
-    } catch(e){
+    } catch (e) {
       return convertToDate(shoppingList['Date']);
     }
   }
@@ -328,8 +345,8 @@ class GetRecipes with ChangeNotifier {
   // delete meal plan
   Future deleteMealPlan(String docId, String uid) async {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
-    await LocalNotificationService().deleteNotification(
-        recipe.shoppingLists.firstWhere((element) => element['UserUid'] == uid)['NotificationId']);
+    await LocalNotificationService().deleteNotification(recipe.shoppingLists
+        .firstWhere((element) => element['UserUid'] == uid)['NotificationId']);
     recipe.shoppingLists.removeWhere((element) => element['UserUid'] == uid);
     updateShoppingListsPerUser(uid);
     await FirebaseFirestore.instance
