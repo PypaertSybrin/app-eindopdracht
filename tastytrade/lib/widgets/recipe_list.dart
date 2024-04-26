@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tastytrade/models/recipe_model.dart';
-import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/recipe.dart';
 
 class RecipeList extends StatelessWidget {
-  List<RecipeModel> recipes;
-  RecipeList({super.key, required this.recipes});
+  final List<RecipeModel> recipes;
+  const RecipeList({super.key, required this.recipes});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/filter.dart';
 import 'package:tastytrade/services/get_recipes.dart';
@@ -50,7 +49,7 @@ class Home extends StatelessWidget {
                           .sortRecipesByPopularityOrDate(true);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return Filter(
+                        return const Filter(
                             filter: 'Popular Recipes', isCategory: false);
                       }));
                     },
@@ -112,7 +111,7 @@ class Home extends StatelessWidget {
                           .sortRecipesByPopularityOrDate(false);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return Filter(filter: 'New Recipes', isCategory: false);
+                        return const Filter(filter: 'New Recipes', isCategory: false);
                       }));
                     },
                     child: const Text('View all',

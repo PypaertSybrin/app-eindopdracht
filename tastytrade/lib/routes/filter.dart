@@ -4,9 +4,9 @@ import 'package:tastytrade/services/get_recipes.dart';
 import 'package:tastytrade/widgets/recipe_list.dart';
 
 class Filter extends StatefulWidget {
-  String filter;
-  bool isCategory;
-  Filter({super.key, required this.filter, required this.isCategory});
+  final String filter;
+  final bool isCategory;
+  const Filter({super.key, required this.filter, required this.isCategory});
 
   @override
   State<Filter> createState() => _FilterState();

@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/recipe_create.dart';
 import 'package:tastytrade/services/get_recipes.dart';
@@ -15,8 +13,6 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(user!.photoURL.toString());
-    print(user!.displayName.toString());
     return RefreshIndicator(
       color: const Color(0xFFFF8737),
       onRefresh: () async {

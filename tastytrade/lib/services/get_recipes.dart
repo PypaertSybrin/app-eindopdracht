@@ -146,7 +146,6 @@ class GetRecipes with ChangeNotifier {
         totalLikes += recipe.likes.length;
       }
     }
-    print('fetching likes');
     return totalLikes;
   }
 

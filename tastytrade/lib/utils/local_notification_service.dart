@@ -48,10 +48,10 @@ class LocalNotificationService {
 
   Future<int> showTimedNotification(
       String title, String description, int value) async {
-    int notification_id = generateUniqueId();
+    int notificationId = generateUniqueId();
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        notification_id,
+        notificationId,
         title,
         description,
         tz.TZDateTime.now(tz.local).add(Duration(seconds: value)),
@@ -62,7 +62,7 @@ class LocalNotificationService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
-    return notification_id;
+    return notificationId;
   }
 
   Future deleteNotification(int notificationId) async {
