@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tastytrade/routes/filter.dart';
 import 'package:tastytrade/services/get_recipes.dart';
@@ -23,18 +24,6 @@ class Home extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search recipes...',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                  ),
-                ),
-              ),
               const Title(title: 'Categories'),
               const Padding(
                 padding: EdgeInsets.only(left: 16, right: 16),
@@ -187,7 +176,8 @@ class Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 24, bottom: 8, left: 16),
+      padding: EdgeInsets.only(
+          top: title == 'Categories' ? 0 : 24, bottom: 8, left: 16),
       child: Text(
         title,
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
