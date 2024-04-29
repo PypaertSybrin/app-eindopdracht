@@ -39,7 +39,7 @@ class _Recipe extends State<RecipeCreate> {
     'Breakfast',
     'Lunch',
     'Dinner',
-    'Desert'
+    'Dessert'
   ];
   String currentIngredient = '';
 
