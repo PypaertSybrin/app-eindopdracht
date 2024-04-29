@@ -74,8 +74,7 @@ class BottomNavigator extends StatelessWidget {
           ],
         ),
       ),
-      body: _widgetOptions
-          .elementAt(context.watch<Navigation>().currentIndex),
+      body: _widgetOptions.elementAt(context.watch<Navigation>().currentIndex),
     );
   }
 }

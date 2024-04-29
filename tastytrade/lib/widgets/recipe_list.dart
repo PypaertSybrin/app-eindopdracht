@@ -8,14 +8,14 @@ class RecipeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("recipes length in favorites and profile: ${recipes.length}");
     return recipes.isNotEmpty
         ? GridView.builder(
             padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
+              childAspectRatio: MediaQuery.of(context).size.width / 2 / 200,
             ),
             itemCount: recipes.length,
             addAutomaticKeepAlives: false,

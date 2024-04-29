@@ -17,8 +17,8 @@ class RecipeDetail extends StatelessWidget {
     await context.read<GetRecipes>().addOrRemoveLike(docId, uid);
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    DateTime? date = await showDatePicker(
+  void selectDate(BuildContext context) {
+    showDatePicker(
       // change background color
       builder: (BuildContext context, Widget? child) {
         return Theme(
@@ -43,13 +43,14 @@ class RecipeDetail extends StatelessWidget {
       helpText: 'Select a date',
       cancelText: 'Cancel',
       confirmText: 'Select',
-    );
-    if (date != null) {
-      DateTime selectedDate = date;
-      await context
-          .read<GetRecipes>()
-          .createShoppingList(recipe.docId, user!.uid, selectedDate);
-    }
+    ).then((date) {
+      if (date != null) {
+        DateTime selectedDate = date;
+        context
+            .read<GetRecipes>()
+            .createShoppingList(recipe.docId, user!.uid, selectedDate);
+      }
+    });
   }
 
   @override
@@ -158,7 +159,7 @@ class RecipeDetail extends StatelessWidget {
                         children: [
                           const Icon(Icons.person),
                           const SizedBox(width: 4),
-                          Text('${recipe.servings.toString()} serves'),
+                          Text('${recipe.servings.toString()} serve(s)'),
                         ],
                       ),
                       const SizedBox(width: 24),
@@ -255,32 +256,33 @@ class RecipeDetail extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: recipe.ingredients.length,
                             itemBuilder: (context, index) {
                               return shoppingList
                                   ? CheckboxListTile(
-                                      title: Text(recipe.ingredients[index]),
-                                      value: context
-                                          .watch<GetRecipes>()
-                                          .checkIfIngredientInShoppingList(
+                                    title: Text(recipe.ingredients[index]),
+                                    value: context
+                                        .watch<GetRecipes>()
+                                        .checkIfIngredientInShoppingList(
+                                            recipe.docId,
+                                            user!.uid,
+                                            recipe.ingredients[index]),
+                                    activeColor: const Color(0xFFFF8737),
+                                    onChanged: (bool? value) {
+                                      // Update the checkbox state
+                                      context
+                                          .read<GetRecipes>()
+                                          .addOrRemoveIngredientFromShoppingList(
                                               recipe.docId,
                                               user!.uid,
-                                              recipe.ingredients[index]),
-                                      activeColor: const Color(0xFFFF8737),
-                                      onChanged: (bool? value) {
-                                        // Update the checkbox state
-                                        context
-                                            .read<GetRecipes>()
-                                            .addOrRemoveIngredientFromShoppingList(
-                                                recipe.docId,
-                                                user!.uid,
-                                                recipe.ingredients[index],
-                                                value!);
-                                      },
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                    )
+                                              recipe.ingredients[index],
+                                              value!);
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                  )
                                   : Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 4.0),

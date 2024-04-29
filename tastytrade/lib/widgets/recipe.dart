@@ -63,8 +63,8 @@ class Recipe extends StatelessWidget {
                     return child;
                   } else {
                     return const Center(
-                      child: CircularProgressIndicator(
-                          color: Color(0xFFFF8737)),
+                      child:
+                          CircularProgressIndicator(color: Color(0xFFFF8737)),
                     );
                   }
                 }),

@@ -51,7 +51,7 @@ class _Recipe extends State<RecipeCreate> {
     return location;
   }
 
-  Future<void> saveRecipe(BuildContext context) async {
+  void saveRecipe(BuildContext context) {
     setState(() {
       isLoading = true;
     });
@@ -62,13 +62,13 @@ class _Recipe extends State<RecipeCreate> {
         category.isNotEmpty &&
         ingredients.isNotEmpty &&
         description.isNotEmpty) {
-      String location = await getPictureReference();
-      createrName = FirebaseAuth.instance.currentUser!.displayName!;
-      createrUid = FirebaseAuth.instance.currentUser!.uid;
-      if (FirebaseAuth.instance.currentUser!.photoURL != null) {
-        createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
-      }
-      final recipe = RecipeModel(
+      getPictureReference().then((location) {
+        createrName = FirebaseAuth.instance.currentUser!.displayName!;
+        createrUid = FirebaseAuth.instance.currentUser!.uid;
+        if (FirebaseAuth.instance.currentUser!.photoURL != null) {
+          createrProfilePicture = FirebaseAuth.instance.currentUser!.photoURL!;
+        }
+        final recipe = RecipeModel(
           docId: docId,
           imageLocation: location,
           recipeName: recipeName,
@@ -82,22 +82,27 @@ class _Recipe extends State<RecipeCreate> {
           description: description,
           likes: likes,
           shoppingLists: shoppingLists,
-          date: DateTime.now());
+          date: DateTime.now(),
+        );
 
-      await context.read<GetRecipes>().addRecipe(recipe);
-      Navigator.pop(context);
+        context.read<GetRecipes>().addRecipe(recipe).then((_) {
+          Navigator.pop(context);
+          setState(() {
+            isLoading = false;
+          });
+        });
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please fill in all fields and add an image.'),
         ),
       );
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = false;
-    });
   }
-
 
   final ingredientController = TextEditingController();
   void addIngredient() {
@@ -153,8 +158,8 @@ class _Recipe extends State<RecipeCreate> {
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+    } on PlatformException {
+      // print('Failed to pick image');
     }
   }
 
@@ -201,6 +206,9 @@ class _Recipe extends State<RecipeCreate> {
               child: Column(
                 children: [
                   TextField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(30),
+                    ],
                     cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       labelText: 'Recipe Name',
@@ -356,6 +364,8 @@ class _Recipe extends State<RecipeCreate> {
                                 ? const Text(
                                     'Enter an ingredient and press \'+\'')
                                 : ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: ingredients.length,
                                     itemBuilder: (context, index) {
@@ -365,7 +375,7 @@ class _Recipe extends State<RecipeCreate> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              'Ingredient ${index + 1}: ${ingredients[index]}',
+                                              ingredients[index],
                                             ),
                                           ),
                                           IconButton(
