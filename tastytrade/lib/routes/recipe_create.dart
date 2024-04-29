@@ -98,12 +98,15 @@ class _Recipe extends State<RecipeCreate> {
     });
   }
 
+
+  final ingredientController = TextEditingController();
   void addIngredient() {
     if (currentIngredient.isNotEmpty) {
       setState(() {
         ingredients.add(currentIngredient);
         currentIngredient = '';
       });
+      ingredientController.clear();
     }
   }
 
@@ -303,6 +306,7 @@ class _Recipe extends State<RecipeCreate> {
                     children: [
                       Expanded(
                         child: TextField(
+                          controller: ingredientController,
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
                             labelText: 'Ingredient',
