@@ -19,45 +19,48 @@ class _LoginState extends State<Login> {
   bool isLoading = false;
   bool error = false;
 
-  Future<void> login() async {
+  void login() {
     setState(() {
       isLoading = true;
     });
     if (email.isNotEmpty && password.isNotEmpty) {
-      // print(email);
-      // print(password);
-
       try {
-        final credential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        if (credential.user != null) {
-          await context.read<GetRecipes>().getAllRecipes();
-          context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
-          context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
-          context
-              .read<GetRecipes>()
-              .updateShoppingListsPerUser(credential.user!.uid);
-          await PermissionHandler().requestNotificationPermission();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => BottomNavigator()),
-          );
-        } else {
+        FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((credential) {
+          if (credential.user != null) {
+            context.read<GetRecipes>().getAllRecipes().then((_) {
+              context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
+              context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
+              context.read<GetRecipes>().updateShoppingListsPerUser(credential.user!.uid);
+              PermissionHandler().requestNotificationPermission();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BottomNavigator()),
+              );
+            });
+          } else {
+            setState(() {
+              error = true;
+              isLoading = false;
+            });
+          }
+        }).catchError((e) {
           setState(() {
             error = true;
+            isLoading = false;
           });
-        }
-      } on FirebaseAuthException catch (e) {
+          if (e is FirebaseAuthException) {
+            if (e.code == 'user-not-found') {
+              // Handle user not found
+            } else if (e.code == 'wrong-password') {
+              // Handle wrong password
+            }
+          }
+        });
+      } catch (e) {
         setState(() {
           error = true;
-        });
-        if (e.code == 'user-not-found') {
-          // print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          // print('Wrong password provided for that user.');
-        }
-      } finally {
-        setState(() {
           isLoading = false;
         });
       }

@@ -47,14 +47,14 @@ class LocalNotificationService {
   // }
 
   Future<int> showTimedNotification(
-      String title, String description, int value) async {
+      String title, String description) async {
     int notificationId = generateUniqueId();
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
         title,
         description,
-        tz.TZDateTime.now(tz.local).add(Duration(seconds: value)),
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         const NotificationDetails(
             android: AndroidNotificationDetails(
                 'your channel id', 'your channel name',

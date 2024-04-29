@@ -1,10 +1,7 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tastytrade/models/recipe_model.dart';
 import 'package:tastytrade/utils/local_notification_service.dart';
-import 'package:tastytrade/utils/permission_handler.dart';
 
 class GetRecipes with ChangeNotifier {
   // alle recipes
@@ -97,16 +94,22 @@ class GetRecipes with ChangeNotifier {
         if (list['UserUid'] == uid) {
           try {
             DateTime date = list['Date'];
-            // check if the date is in the past, if so delete the meal plan
-            if (DateTime.now().day <= date.day) {
+            DateTime currentDate = DateTime(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day);
+            DateTime dateToCheck = DateTime(date.year, date.month, date.day);
+            // check if the day of the date is in the past, if so delete the meal plan
+            if (currentDate.isBefore(dateToCheck) || currentDate.isAtSameMomentAs(dateToCheck)) {
               shoppingList.add(recipe);
             } else {
               deleteMealPlan(recipe.docId, uid);
             }
           } catch (e) {
             DateTime date = convertToDate(list['Date']);
+            DateTime currentDate = DateTime(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day);
+            DateTime dateToCheck = DateTime(date.year, date.month, date.day);
             // check if the date is in the past, if so delete the meal plan
-            if (DateTime.now().day <= date.day) {
+            if (currentDate.isBefore(dateToCheck) || currentDate.isAtSameMomentAs(dateToCheck)) {
               shoppingList.add(recipe);
             } else {
               deleteMealPlan(recipe.docId, uid);
@@ -255,8 +258,7 @@ class GetRecipes with ChangeNotifier {
     final recipe = _recipes.firstWhere((element) => element.docId == docId);
     int notificationId = await LocalNotificationService().showTimedNotification(
         'Ingredients required',
-        'Make sure you have all the ingredients for meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year}',
-        5);
+        'Make sure you have all the ingredients for meal \'${recipe.recipeName}\' on ${date.day}/${date.month}/${date.year}');
     recipe.shoppingLists.add({
       'UserUid': uid,
       'Date': date,
@@ -268,7 +270,6 @@ class GetRecipes with ChangeNotifier {
         .collection('recipes')
         .doc(docId)
         .update({'ShoppingLists': recipe.shoppingLists});
-    notifyListeners();
   }
 
   // get date of a shopping list

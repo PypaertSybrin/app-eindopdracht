@@ -17,40 +17,42 @@ class RecipeDetail extends StatelessWidget {
     await context.read<GetRecipes>().addOrRemoveLike(docId, uid);
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    DateTime? date = await showDatePicker(
-      // change background color
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFFFF8737),
-              onPrimary: Colors.black,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFFFF8737),
-              ),
+  void selectDate(BuildContext context) {
+  showDatePicker(
+    // change background color
+    builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: ThemeData.light().copyWith(
+          colorScheme: const ColorScheme.light(
+            primary: Color(0xFFFF8737),
+            onPrimary: Colors.black,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFFFF8737),
             ),
           ),
-          child: child!,
-        );
-      },
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      helpText: 'Select a date',
-      cancelText: 'Cancel',
-      confirmText: 'Select',
-    );
+        ),
+        child: child!,
+      );
+    },
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime.now(),
+    lastDate: DateTime.now().add(const Duration(days: 365)),
+    helpText: 'Select a date',
+    cancelText: 'Cancel',
+    confirmText: 'Select',
+  ).then((date) {
     if (date != null) {
       DateTime selectedDate = date;
-      await context
+      context
           .read<GetRecipes>()
           .createShoppingList(recipe.docId, user!.uid, selectedDate);
     }
-  }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {

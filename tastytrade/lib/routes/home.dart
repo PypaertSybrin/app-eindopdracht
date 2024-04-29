@@ -18,6 +18,7 @@ class Home extends StatelessWidget {
         await context.read<GetRecipes>().getAllRecipes();
       },
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Column(
@@ -111,7 +112,8 @@ class Home extends StatelessWidget {
                           .sortRecipesByPopularityOrDate(false);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return const Filter(filter: 'New Recipes', isCategory: false);
+                        return const Filter(
+                            filter: 'New Recipes', isCategory: false);
                       }));
                     },
                     child: const Text('View all',
@@ -176,7 +178,7 @@ class Title extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          top: title == 'Categories' ? 0 : 24, bottom: 8, left: 16),
+          top: title == 'Categories' ? 0 : 16, bottom: 8, left: 16),
       child: Text(
         title,
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),

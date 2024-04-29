@@ -27,7 +27,7 @@ class _SignUpState extends State<SignUp> {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  Future<void> signUp() async {
+  void signUp() {
     setState(() {
       isLoading = true;
     });
@@ -35,47 +35,64 @@ class _SignUpState extends State<SignUp> {
       setState(() {
         nameError = name.isEmpty;
       });
-      try {
-        final credential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((credential) {
         if (credential.user != null) {
-          await credential.user!.updateDisplayName(name);
-          if (image != null) {
-            final profileRef = storageRef.child(image!.path);
-            await credential.user!.updatePhotoURL(await profileRef
-                .putFile(image!)
-                .then((value) => value.ref.getDownloadURL()));
-          }
-          await context.read<GetRecipes>().getAllRecipes();
-          context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
-          context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
-          context
-              .read<GetRecipes>()
-              .updateShoppingListsPerUser(credential.user!.uid);
-          await PermissionHandler().requestNotificationPermission();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => BottomNavigator()),
-          );
-          setState(() {
-            isLoading = false;
+          credential.user!.updateDisplayName(name).then((_) {
+            if (image != null) {
+              final profileRef = storageRef.child(image!.path);
+              profileRef.putFile(image!).then((value) {
+                value.ref.getDownloadURL().then((url) {
+                  credential.user!.updatePhotoURL(url).then((_) {
+                    context.read<GetRecipes>().getAllRecipes().then((_) {
+                      context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
+                      context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
+                      context.read<GetRecipes>().updateShoppingListsPerUser(credential.user!.uid);
+                      PermissionHandler().requestNotificationPermission().then((_) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BottomNavigator()),
+                        );
+                      });
+                      setState(() {
+                        isLoading = false;
+                      });
+                    });
+                  });
+                });
+              });
+            } else {
+              context.read<GetRecipes>().getAllRecipes().then((_) {
+                context.read<GetRecipes>().updateRecipesByLiked(credential.user!.uid);
+                context.read<GetRecipes>().updateRecipesByUser(credential.user!.uid);
+                context.read<GetRecipes>().updateShoppingListsPerUser(credential.user!.uid);
+                PermissionHandler().requestNotificationPermission().then((_) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => BottomNavigator()),
+                  );
+                });
+                setState(() {
+                  isLoading = false;
+                });
+              });
+            }
           });
         }
-        // print(credential.user);
-      } on FirebaseAuthException catch (e) {
+      }).catchError((e) {
         setState(() {
           emailOrPasswordError = true;
-        });
-        if (e.code == 'user-not-found') {
-          // print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          // print('Wrong password provided for that user.');
-        }
-      } finally {
-        setState(() {
           isLoading = false;
         });
-      }
+        if (e is FirebaseAuthException) {
+          if (e.code == 'user-not-found') {
+            // Handle user not found
+          } else if (e.code == 'wrong-password') {
+            // Handle wrong password
+          }
+        }
+      });
     } else {
       setState(() {
         nameError = name.isEmpty;
@@ -93,8 +110,8 @@ class _SignUpState extends State<SignUp> {
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+    } on PlatformException {
+      // print('Failed to pick image');
     }
   }
 
