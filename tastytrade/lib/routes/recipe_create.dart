@@ -206,6 +206,9 @@ class _Recipe extends State<RecipeCreate> {
               child: Column(
                 children: [
                   TextField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(30),
+                    ],
                     cursorColor: Colors.black,
                     decoration: const InputDecoration(
                       labelText: 'Recipe Name',
@@ -361,6 +364,8 @@ class _Recipe extends State<RecipeCreate> {
                                 ? const Text(
                                     'Enter an ingredient and press \'+\'')
                                 : ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: ingredients.length,
                                     itemBuilder: (context, index) {
@@ -370,7 +375,7 @@ class _Recipe extends State<RecipeCreate> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              'Ingredient ${index + 1}: ${ingredients[index]}',
+                                              ingredients[index],
                                             ),
                                           ),
                                           IconButton(
